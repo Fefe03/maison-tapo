@@ -236,7 +236,7 @@
     $("demoButton").addEventListener("click", () => { demo = true; token = ""; devices = demoDevices(); lastSync = null; message(); $("configDialog").close(); render(); });
     function updateClock() { const now = new Date(); $("clock").textContent = now.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}); $("clock").dateTime = now.toISOString(); $("headerDate").textContent = now.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long"}); }
     updateClock(); setInterval(updateClock, 10000);
-    setInterval(() => { if (!demo && token && !busy && !document.hidden) refresh(); }, 45000);
+    setInterval(() => { if (!demo && token && lastSync && !busy && !document.hidden) refresh(); }, 45000);
     devices = demo ? demoDevices() : []; render();
     if (!demo) openSettings();
   </script>

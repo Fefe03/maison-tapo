@@ -83,11 +83,13 @@ class BackendTests(unittest.TestCase):
             self.assertEqual(self.client.get("/api/devices", headers=HEADERS).status_code, 503)
 
     def test_nested_tapo_login_errors_are_reported_without_secrets(self):
-        for code, status, expected in [
+        cases = [
             ("-20677", 503, "MFA-Code"),
             ("-20601", 502, "E-Mail oder Passwort"),
             (-20675, 502, "Kontosperre"),
-        ]:
+            ("-20661", 502, "Kontosperre"),
+        ]
+        for attempt, (code, status, expected) in enumerate(cases):
             with self.subTest(code=code):
                 self.cloud.manager = None
                 replies = [
@@ -97,10 +99,15 @@ class BackendTests(unittest.TestCase):
                     }}),
                 ]
                 env = {"TAPO_USERNAME": "test@example.invalid", "TAPO_PASSWORD": "fake-password"}
-                with patch.dict(os.environ, env), patch.object(
-                    TPLinkApi, "_request_post_v2", side_effect=replies
+                with (
+                    patch.dict(os.environ, env),
+                    patch("main.monotonic", return_value=attempt * 7201),
+                    patch.object(TPLinkApi, "_request_post_v2", side_effect=replies) as request,
                 ):
                     response = self.client.get("/api/devices", headers=HEADERS)
+                    repeated = self.client.get("/api/devices", headers=HEADERS)
+                self.assertEqual(request.call_count, 2)
+                self.assertEqual(repeated.json(), response.json())
                 self.assertEqual(response.status_code, status)
                 self.assertIn(expected, response.json()["detail"])
                 self.assertNotIn("sensitive-upstream-text", response.text)

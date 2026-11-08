@@ -14,6 +14,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from pathlib import Path
+from time import monotonic
 
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -60,13 +61,35 @@ class TapoDeviceManager(TPLinkDeviceManager):
 class Cloud:
     def __init__(self):
         self.manager = None
+        self.login_failure = None
+        self.login_retry_at = 0.0
 
     async def devices(self):
         if self.manager is None:
+            if self.login_failure and monotonic() < self.login_retry_at:
+                status, detail = self.login_failure
+                raise HTTPException(status, detail)
             username, password = os.getenv("TAPO_USERNAME"), os.getenv("TAPO_PASSWORD")
             if not username or not password:
                 raise HTTPException(503, "TAPO_USERNAME und TAPO_PASSWORD fehlen im Backend.")
-            self.manager = TapoDeviceManager(username.strip(), password)
+            try:
+                self.manager = TapoDeviceManager(username.strip(), password)
+            except TPLinkCloudError as error:
+                cooldown = 300
+                if error.error_code in (-20661, -20675):
+                    cooldown = 7200
+                    failure = (502, "TP-Link meldet eine vorübergehende Kontosperre. Warte zwei Stunden vor dem nächsten Anmeldeversuch.")
+                elif isinstance(error, TPLinkMFARequiredError):
+                    failure = (503, "TP-Link verlangt einen MFA-Code. Dieser Server unterstützt noch keinen MFA-Dialog.")
+                elif isinstance(error, TPLinkAuthError):
+                    failure = (502, "Tapo lehnt E-Mail oder Passwort ab. Prüfe TAPO_USERNAME und TAPO_PASSWORD in Render.")
+                else:
+                    code = f" (Code {error.error_code})" if type(error.error_code) is int else ""
+                    failure = (502, f"Tapo Cloud konnte die Anmeldung nicht abschließen{code}.")
+                self.login_failure = failure
+                self.login_retry_at = monotonic() + cooldown
+                raise HTTPException(*failure) from None
+            self.login_failure = None
         devices = await self.manager.get_devices()
         # Only P-series sockets: exclude cameras, hubs and other account devices.
         return [d for d in devices if re.match(r"^P\d", d.device_info.device_model or "")]
@@ -171,14 +194,6 @@ def create_app(cloud=None):
                 return asyncio.run(controller.perform(action, alias))
             except HTTPException:
                 raise
-            except TPLinkMFARequiredError:
-                controller.manager = None
-                raise HTTPException(503, "TP-Link verlangt einen MFA-Code. Dieser minimale Server unterstützt keinen MFA-Dialog.") from None
-            except TPLinkAuthError as error:
-                controller.manager = None
-                if error.error_code == -20675:
-                    raise HTTPException(502, "TP-Link meldet eine Kontosperre. Bitte prüfe dein Konto in der Tapo-App.") from None
-                raise HTTPException(502, "Tapo lehnt E-Mail oder Passwort ab. Prüfe TAPO_USERNAME und TAPO_PASSWORD in Render.") from None
             except TPLinkCloudError as error:
                 controller.manager = None
                 code = f" (Code {error.error_code})" if type(error.error_code) is int else ""
