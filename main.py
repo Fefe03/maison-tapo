@@ -9,6 +9,7 @@ import asyncio
 import os
 import re
 import secrets
+from uuid import uuid4
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
@@ -17,7 +18,43 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-from tplinkcloud import TPLinkDeviceManager, TPLinkAuthError, TPLinkMFARequiredError
+from tplinkcloud import TPLinkDeviceManager, TPLinkAuthError, TPLinkMFARequiredError, TPLinkCloudError
+from tplinkcloud.api_response import TPLinkApiResponse
+from tplinkcloud.client import TPLinkApi
+
+
+class TapoApi(TPLinkApi):
+    def _request_post_v2(self, base_url, url_path, body, token=None):
+        response = super()._request_post_v2(base_url, url_path, body, token)
+        if url_path not in ("/api/v2/account/login", "/api/v2/account/checkMFACodeAndLogin"):
+            return response
+        if response.successful and isinstance(response.result, dict):
+            # The Tapo login may wrap a rejected login in an outer success.
+            code = response.result.get("errorCode")
+            if type(code) is str and re.fullmatch(r"-?\d{1,8}", code):
+                code = int(code)
+            if type(code) is int and code != 0:
+                return TPLinkApiResponse({"error_code": code, "result": response.result})
+        return response
+
+
+class TapoDeviceManager(TPLinkDeviceManager):
+    def __init__(self, username, password):
+        # Reuse discovery and token refresh from tplink-cloud-api 5.2.2.
+        # Log in directly so the dual-cloud manager cannot swallow Tapo errors.
+        term_id = str(uuid4())
+        super().__init__(prefetch=False, cache_devices=False, term_id=term_id)
+        self._tapo_api = TapoApi(cloud_type="tapo", term_id=term_id)
+        result = self._tapo_api.login(username, password) or {}
+        self._tapo_token = result.get("token")
+        self._tapo_refresh_token = result.get("refreshToken")
+        if not self._tapo_token:
+            raise TPLinkCloudError("Tapo login returned no token")
+
+    async def get_devices(self):
+        return await self._get_cloud_devices(
+            self._tapo_api, self._tapo_token, self._tapo_refresh_token, "tapo"
+        )
 
 
 class Cloud:
@@ -29,16 +66,9 @@ class Cloud:
             username, password = os.getenv("TAPO_USERNAME"), os.getenv("TAPO_PASSWORD")
             if not username or not password:
                 raise HTTPException(503, "TAPO_USERNAME und TAPO_PASSWORD fehlen im Backend.")
-            self.manager = TPLinkDeviceManager(
-                username, password, prefetch=False, cache_devices=False, include_tapo=True
-            )
-        # v5.2.2 swallows Tapo-login errors. Do not report a false empty success.
-        if not self.manager.get_tapo_token():
-            self.manager = None
-            raise HTTPException(502, "Tapo-Cloud-Anmeldung fehlgeschlagen. Zugang und gegebenenfalls MFA prüfen.")
+            self.manager = TapoDeviceManager(username.strip(), password)
         devices = await self.manager.get_devices()
         # Only P-series sockets: exclude cameras, hubs and other account devices.
-        # Model matching also retains sockets deduplicated into the Kasa cloud.
         return [d for d in devices if re.match(r"^P\d", d.device_info.device_model or "")]
 
     async def status(self, device):
@@ -144,9 +174,15 @@ def create_app(cloud=None):
             except TPLinkMFARequiredError:
                 controller.manager = None
                 raise HTTPException(503, "TP-Link verlangt einen MFA-Code. Dieser minimale Server unterstützt keinen MFA-Dialog.") from None
-            except TPLinkAuthError:
+            except TPLinkAuthError as error:
                 controller.manager = None
-                raise HTTPException(502, "TP-Link-Anmeldung fehlgeschlagen. Backend-Zugangsdaten prüfen.") from None
+                if error.error_code == -20675:
+                    raise HTTPException(502, "TP-Link meldet eine Kontosperre. Bitte prüfe dein Konto in der Tapo-App.") from None
+                raise HTTPException(502, "Tapo lehnt E-Mail oder Passwort ab. Prüfe TAPO_USERNAME und TAPO_PASSWORD in Render.") from None
+            except TPLinkCloudError as error:
+                controller.manager = None
+                code = f" (Code {error.error_code})" if type(error.error_code) is int else ""
+                raise HTTPException(502, f"Tapo Cloud konnte die Anfrage nicht abschließen{code}.") from None
             except Exception:
                 controller.manager = None
                 raise HTTPException(502, "TP-Link Cloud nicht erreichbar. Später erneut aktualisieren.") from None

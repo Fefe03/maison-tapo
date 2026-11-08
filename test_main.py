@@ -8,6 +8,8 @@ from unittest.mock import patch
 from urllib.parse import quote
 
 from fastapi.testclient import TestClient
+from tplinkcloud.api_response import TPLinkApiResponse
+from tplinkcloud.client import TPLinkApi
 from main import Cloud, create_app
 
 TOKEN = "test-only-token-not-a-real-secret-1234"
@@ -79,6 +81,29 @@ class BackendTests(unittest.TestCase):
     def test_missing_token_fails_closed(self):
         with patch.dict(os.environ, {"DASHBOARD_TOKEN": ""}):
             self.assertEqual(self.client.get("/api/devices", headers=HEADERS).status_code, 503)
+
+    def test_nested_tapo_login_errors_are_reported_without_secrets(self):
+        for code, status, expected in [
+            ("-20677", 503, "MFA-Code"),
+            ("-20601", 502, "E-Mail oder Passwort"),
+            (-20675, 502, "Kontosperre"),
+        ]:
+            with self.subTest(code=code):
+                self.cloud.manager = None
+                replies = [
+                    TPLinkApiResponse({"error_code": 0, "result": {}}),
+                    TPLinkApiResponse({"error_code": 0, "result": {
+                        "errorCode": code, "errorMsg": "sensitive-upstream-text",
+                    }}),
+                ]
+                env = {"TAPO_USERNAME": "test@example.invalid", "TAPO_PASSWORD": "fake-password"}
+                with patch.dict(os.environ, env), patch.object(
+                    TPLinkApi, "_request_post_v2", side_effect=replies
+                ):
+                    response = self.client.get("/api/devices", headers=HEADERS)
+                self.assertEqual(response.status_code, status)
+                self.assertIn(expected, response.json()["detail"])
+                self.assertNotIn("sensitive-upstream-text", response.text)
 
     def test_list_filters_cameras_and_preserves_unknown(self):
         self.b.state = None
