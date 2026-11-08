@@ -10,11 +10,33 @@
   <style>
     :root{color-scheme:dark;--bg:#121613;--panel:#181d19;--line:#30372f;--ink:#f0eee5;--muted:#a2a99e;--gold:#d7ba7d;--green:#a6bd9a}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.45}button:focus-visible,a:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px solid var(--gold);outline-offset:5px}button{color:inherit}a{color:var(--gold)}.shell{max-width:1440px;margin:auto;padding:0 64px}header{height:102px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:13px;letter-spacing:6px;font-size:18px}.brand-mark{width:31px;height:34px;color:var(--gold)}.header-right{display:flex;align-items:center;gap:30px}.eyebrow{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;font-weight:600;color:var(--muted)}.header-date{color:var(--muted);font-size:12px}.icon-btn{border:1px solid var(--line);background:transparent;border-radius:50%;width:39px;height:39px;display:inline-flex;align-items:center;justify-content:center}.icon-btn:hover{border-color:var(--gold);color:var(--gold)}svg.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.intro{display:flex;align-items:flex-end;justify-content:space-between;padding:47px 0 36px;gap:20px}h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(34px,4vw,51px);line-height:1.15;letter-spacing:-1.6px;font-weight:400;margin:14px 0 15px}.intro p{color:var(--muted);margin:0;font-size:13px;line-height:1.7}.connection{display:flex;align-items:center;gap:9px;border:1px solid #434735;padding:10px 15px;border-radius:30px;color:var(--gold);font-size:11px;white-space:nowrap}.dot{width:6px;height:6px;display:inline-block;border-radius:50%;background:currentColor}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}.plan-panel{background:linear-gradient(140deg,#1c211c,#171c18);border:1px solid var(--line);border-radius:8px;overflow:hidden}.panel-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:25px 28px}.panel-title{font-size:14px;font-weight:400;letter-spacing:.3px;margin:0}.level{font-size:10px;color:var(--muted);letter-spacing:1.5px}.plan-wrap{padding:0 18px;position:relative}.floorplan{display:block;width:100%;height:auto;min-height:260px}.walls{fill:none;stroke:#86917d;stroke-width:3}.furniture{fill:#242b23;stroke:#53604f;stroke-width:1.2}.furniture-line{stroke:#53604f;stroke-width:1.2;fill:none}.room-label{fill:#a2ac9b;font-size:10px;letter-spacing:2px;font-family:Arial,sans-serif}.room-number{fill:#626e5e;font-size:9px;font-family:Arial,sans-serif;letter-spacing:1.3px}.pin{cursor:pointer;outline:none}.pin circle.base{fill:#232b24;stroke:#768371;stroke-width:1.2;transition:fill .25s}.pin .bulb{fill:none;stroke:#c1c9ba;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.pin.on circle.base{fill:#d7ba7d;stroke:#f5dba6;filter:drop-shadow(0 0 10px #d8ba7d88)}.pin.on .bulb{stroke:#343225}.pin:hover circle.base,.pin:focus-visible circle.base{stroke:#fff;stroke-width:2.5}.pin.unknown{opacity:.45}.pin.busy .base{stroke-dasharray:4 4;animation:pulse 1s infinite}.room-glow{opacity:0;transition:opacity .5s}.room-glow.on{opacity:1}.plan-bottom{padding:22px 28px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:11px;color:var(--muted)}.legend{display:flex;gap:20px}.legend span{display:flex;gap:7px;align-items:center}.legend .on-dot{background:var(--gold)}.legend .off-dot{background:#687461}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:3px 0 19px}.section-heading h2{font-size:14px;font-weight:400;margin:0}.counter{font-size:11px;color:var(--muted)}.device-list{display:grid;gap:11px}.device{width:100%;border:1px solid var(--line);border-radius:6px;padding:19px 18px;background:var(--panel);display:flex;gap:15px;align-items:center;text-align:left;transition:border-color .2s,background .2s}.device.on{background:linear-gradient(105deg,#282c22,#1d231d);border-color:#5a5940}.device:hover:not(:disabled){border-color:#a5946c}.device-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:#242c24;border-radius:50%;color:#a4ae9e;flex-shrink:0}.device.on .device-icon{background:#3c3d29;color:var(--gold)}.device-copy{flex:1;min-width:0}.device-name{display:block;font-size:12px;margin-bottom:7px;overflow-wrap:anywhere}.device-room{display:block;font-size:10px;color:var(--muted)}.device-state{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:9px;letter-spacing:.6px;color:var(--muted)}.device.on .device-state{color:var(--gold)}.switch{display:block;width:31px;height:18px;border-radius:12px;background:#414b3f;padding:3px}.switch:after{content:'';display:block;width:12px;height:12px;border-radius:50%;background:#abb2a5;transition:transform .2s}.device.on .switch{background:#d7ba7d}.device.on .switch:after{background:#292d22;transform:translateX(13px)}.device.busy .switch{animation:pulse .8s infinite}.master{width:100%;display:flex;align-items:center;text-align:left;gap:14px;padding:20px 18px;border:1px solid #5d604a;border-radius:6px;background:transparent;margin-top:24px}.master:hover:not(:disabled){background:#242b22;border-color:var(--gold)}.master .icon{color:var(--gold);width:23px;height:23px}.master strong{font-size:12px;font-weight:400;display:block;margin-bottom:7px}.master small{font-size:10px;color:var(--muted)}.arrow{margin-left:auto;color:var(--gold);font-size:20px}.side-note{font-size:10px;color:var(--muted);line-height:1.7;margin:17px 2px}.summary{display:flex;align-items:center;gap:23px;margin-top:27px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.summary-icon{color:var(--gold);width:39px;height:39px;border:1px solid #464b36;border-radius:50%;display:flex;align-items:center;justify-content:center}.summary strong{font-size:13px;font-weight:400;display:block;margin-bottom:6px}.summary p{margin:0;font-size:11px;color:var(--muted)}.summary-time{margin-left:auto;text-align:right;color:var(--muted);font-size:10px;line-height:1.8}.refresh{display:flex;align-items:center;gap:8px;border:none;background:none;font-size:11px;color:var(--muted)}.refresh:hover{color:var(--gold)}footer{display:flex;justify-content:space-between;align-items:center;padding:29px 0 30px;color:#929d8c;font-size:9px;letter-spacing:1.5px}.footer-brand{letter-spacing:3px;color:#b1b9a8}.notice{padding:13px 16px;border:1px solid #8d684d;background:#34281f;color:#f3c5a0;border-radius:6px;line-height:1.6;font-size:12px;margin:0 0 20px}.notice[hidden]{display:none}.empty{border:1px dashed var(--line);padding:24px;color:var(--muted);font-size:12px;line-height:1.8;border-radius:6px}dialog{width:min(440px,calc(100% - 32px));background:#1c231d;color:var(--ink);border:1px solid #59634d;border-radius:12px;padding:30px;box-shadow:0 30px 100px #0008}dialog::backdrop{background:#080c09cc;backdrop-filter:blur(6px)}dialog h2{font-family:Georgia,serif;font-weight:400;font-size:28px;margin:0 0 12px}dialog p{color:var(--muted);font-size:12px;line-height:1.8}dialog label{display:block;margin-top:20px;font-size:11px;color:var(--muted)}dialog input{width:100%;display:block;margin-top:8px;border:1px solid #46513f;border-radius:5px;padding:12px;background:#121813;color:var(--ink)}.dialog-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}.primary,.secondary{border-radius:5px;padding:12px 15px;font-size:12px}.primary{background:var(--gold);color:#23271d;border:1px solid var(--gold)}.secondary{background:none;border:1px solid #59634d}.dialog-close{position:absolute;right:18px;top:17px;border:0;background:none;color:var(--muted);font-size:24px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@keyframes pulse{50%{opacity:.3}}@media(min-width:1500px){.shell{padding:0 80px}.intro{padding-top:60px}.floorplan{max-height:530px}}@media(max-width:1050px){.shell{padding:0 32px}.workspace{grid-template-columns:minmax(0,1fr) 285px;gap:20px}.panel-top{padding:22px}.plan-bottom{padding:20px}.legend{gap:12px}.plan-hint{display:none}}@media(max-width:760px){.shell{padding:0 22px}header{height:80px}.header-date{display:none}.header-right{gap:15px}.intro{padding:32px 0 27px;align-items:flex-start;flex-direction:column;gap:20px}h1{font-size:38px}.workspace{grid-template-columns:1fr}.floorplan{min-height:0}.controls{margin-top:9px}.device-list{grid-template-columns:repeat(2,minmax(0,1fr))}.device{padding:15px;gap:10px}.device-icon{display:none}.master{margin-top:15px}.side-note{margin-bottom:0}.summary{margin-top:20px;gap:13px}.summary-time{max-width:90px}.panel-top{padding:20px}.plan-bottom{padding:18px 20px}footer{font-size:8px;letter-spacing:1px;gap:15px}.connection{font-size:10px;padding:8px 12px}}@media(max-width:390px){.device-list{grid-template-columns:1fr}.device-icon{display:flex}.shell{padding:0 16px}h1{font-size:34px}.brand{font-size:16px}.summary-time{display:none}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+    .room-devices{grid-column:1/-1;display:grid;gap:9px;min-width:0}
+    .room-devices h3{margin:7px 0 2px;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
+    .room-devices:first-child h3{margin-top:0}
+    .light-group{display:grid;gap:7px;padding:8px;border:1px solid #434735;border-radius:8px;background:#1c231c}
+    .light-group .device{padding:12px 10px}
+    .light-group .group-control{background:none;border-color:transparent;padding:8px 10px 10px}
+    .light-group .group-control.on{color:var(--gold)}
+    .device.hub{padding-top:12px;padding-bottom:12px}
+    .device.hub:disabled{opacity:1;color:var(--muted)}
+    .device.hub .state-label{border:1px solid #46513f;border-radius:10px;padding:4px 7px}
+    .device:disabled:not(.busy){cursor:default}
+    .map-caption{fill:#b2bbac;font-size:12px;font-family:Arial,sans-serif;text-anchor:middle;paint-order:stroke;stroke:#1c241d;stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+    .pin.on .map-caption{fill:#ead7a7}
+    .pin.hub{cursor:default}
+    .pin[aria-disabled=true]{cursor:default}
+    .plan-link{color:var(--muted);background:none;border:none;padding:0;text-align:right;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+    .plan-link:hover{color:var(--gold)}
+    @media(max-width:760px){.room-devices{grid-template-columns:repeat(2,minmax(0,1fr))}.room-devices h3,.light-group{grid-column:1/-1}.light-group{grid-template-columns:repeat(2,minmax(0,1fr))}.group-control{grid-column:1/-1}.map-caption{font-size:14px}}
+    @media(max-width:420px){.room-devices,.light-group{grid-template-columns:minmax(0,1fr)}}
   </style>
 </head>
 <body>
   <svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
     <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0c-1 .8-1 2-1 2H9s0-1.2-1-2Z"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-6 6v4m-6-13v3a6 6 0 0 0 6 6"/></symbol>
+    <symbol id="i-hub" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="3"/><path d="M8 7a6 6 0 0 1 8 0M10 15h4"/></symbol>
+    <symbol id="i-group" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/><path d="M14 7h3v3M7 14v3h3"/></symbol>
     <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9M7 5.5a8 8 0 1 0 10 0"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="var(--bg)"/><circle cx="15" cy="17" r="3" fill="var(--bg)"/></symbol>
     <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3M5 15a8 8 0 0 0 13 3"/></symbol>
@@ -33,41 +55,56 @@
       <div id="notice" class="notice" role="alert" hidden></div>
       <div class="workspace">
         <section class="plan-panel" aria-labelledby="planTitle">
-          <div class="panel-top"><h2 class="panel-title" id="planTitle">Dein Zuhause im Überblick</h2><span class="level">GRUNDRISS / 01</span></div>
+          <div class="panel-top"><h2 class="panel-title" id="planTitle">Dein Zuhause im Überblick</h2><span class="level">2 RÄUME</span></div>
           <div class="plan-wrap">
-            <svg class="floorplan" viewBox="0 0 700 465" aria-labelledby="planSvgTitle planSvgDesc">
-              <title id="planSvgTitle">Interaktiver Grundriss</title><desc id="planSvgDesc">Wohnzimmer links, Schlafzimmer rechts oben, Küche und Flur rechts unten. Lampensymbole zum Schalten anklicken oder mit Tab und Enter bedienen.</desc>
+            <svg class="floorplan" viewBox="0 0 700 425" aria-labelledby="planSvgTitle planSvgDesc">
+              <title id="planSvgTitle">Schlafzimmer und Wohnzimmer</title><desc id="planSvgDesc">Schematische Raumaufteilung. Links sind Ambientebeleuchtung und Vitrine in der Gruppe Schlafzimmer Lights. Rechts sind Schreibtischlampe, Ladegerät, Monitor und der Hub Wohnzimmer. Schaltbare Symbole sind per Klick oder Tastatur bedienbar.</desc>
               <defs><radialGradient id="warm"><stop stop-color="#d9b66c" stop-opacity=".17"/><stop offset="1" stop-color="#d9b66c" stop-opacity="0"/></radialGradient><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".6" fill="#515b4b" opacity=".35"/></pattern></defs>
-              <rect x="20" y="10" width="660" height="425" fill="url(#grid)"/>
-              <path d="M66 65H633V392H66Z" fill="#1c241d"/>
-              <ellipse id="glow-living" class="room-glow" cx="220" cy="226" rx="175" ry="175" fill="url(#warm)"/>
-              <ellipse id="glow-bedroom" class="room-glow" cx="512" cy="142" rx="132" ry="110" fill="url(#warm)"/>
-              <ellipse id="glow-kitchen" class="room-glow" cx="510" cy="320" rx="130" ry="100" fill="url(#warm)"/>
-              <g class="walls"><path d="M66 185V65H633V392H560M500 392H66V249M390 65V237M390 300V392M390 248H477M531 248H633"/><path d="M66 185v64M92 65h105M449 65h92" stroke="#d8d4bb" stroke-width="1"/><path d="M60 185v64M92 59h105M449 59h92" stroke="#738169" stroke-width="1"/></g>
-              <g class="furniture-line" stroke-opacity=".65"><path d="M390 300h-55a55 55 0 0 1 55-55M477 248v-54a54 54 0 0 1 54 54M500 392v-60a60 60 0 0 1 60 60"/></g>
-              <g class="furniture"><rect x="100" y="145" width="67" height="171" rx="7"/><rect x="104" y="153" width="13" height="155" rx="4"/><rect x="119" y="156" width="42" height="70" rx="4"/><rect x="119" y="232" width="42" height="70" rx="4"/><rect x="98" y="143" width="71" height="13" rx="4"/><rect x="98" y="305" width="71" height="13" rx="4"/><rect x="215" y="194" width="75" height="80" rx="25"/><rect x="226" y="205" width="53" height="58" rx="18" fill="none"/><circle cx="249" cy="221" r="7"/><path d="M327 153h16v144h-16Z"/><path d="M335 164v121"/><rect x="96" y="340" width="54" height="22" rx="2"/><circle cx="321" cy="346" r="18"/><path d="m314 350 12-13m-10 3 8 9m-8-3-2-9"/>
-                <rect x="465" y="93" width="109" height="112" rx="4"/><rect x="460" y="88" width="119" height="12" rx="2"/><rect x="474" y="103" width="40" height="26" rx="4"/><rect x="524" y="103" width="40" height="26" rx="4"/><path d="M465 139h109M465 147h109"/><rect x="435" y="96" width="20" height="25" rx="2"/><rect x="584" y="96" width="20" height="25" rx="2"/>
-                <path d="M599 267h20v103H551v-23h48Z"/><rect x="603" y="275" width="12" height="26" rx="4"/><circle cx="606" cy="327" r="4"/><circle cx="608" cy="340" r="4"/><rect x="443" y="297" width="65" height="40" rx="13"/><path d="M454 290v-5h12v5m17 0v-5h12v5m-41 54v5h12v-5m17 0v5h12v-5"/>
+              <rect x="20" y="10" width="660" height="390" fill="url(#grid)"/>
+              <rect x="64" y="48" width="259" height="330" fill="#1b252b"/>
+              <rect x="350" y="48" width="286" height="330" fill="#262820"/>
+              <ellipse id="glow-bedroom" class="room-glow" cx="198" cy="216" rx="130" ry="154" fill="url(#warm)"/>
+              <ellipse id="glow-living" class="room-glow" cx="488" cy="202" rx="140" ry="140" fill="url(#warm)"/>
+              <g class="walls"><path d="M64 48H323V378H64ZM350 48H636V378H350Z"/><path d="M323 116V243M421 48H550" stroke="#c1c9ba" stroke-width="1"/><path d="M328 116V243M421 42H550" stroke="#738169" stroke-width="1"/></g>
+              <g class="furniture">
+                <g aria-hidden="true">
+                  <rect x="179" y="167" width="115" height="161" rx="5" fill="#34454b"/><rect x="175" y="320" width="123" height="12" rx="2" fill="#464338"/>
+                  <rect x="188" y="284" width="44" height="29" rx="5"/><rect x="241" y="284" width="44" height="29" rx="5"/><path d="M179 270h115M179 260h115"/>
+                  <rect x="78" y="121" width="46" height="101" rx="3" fill="#393b33"/><path d="M101 121v101"/>
+                  <rect x="135" y="117" width="62" height="24" rx="3" fill="#52493b"/>
+                  <rect x="241" y="110" width="58" height="39" rx="3" fill="#344b45"/><path d="M241 130h58M270 110v39"/>
+                  <path d="M311 116v127M311 170h12M311 191h12" fill="none"/>
+                </g>
+                <g aria-hidden="true">
+                  <rect x="392" y="113" width="194" height="65" rx="6" fill="#4a4336"/>
+                  <rect x="473" y="119" width="49" height="17" rx="3"/><path d="M497 136v9m-14 0h28"/>
+                  <circle cx="477" cy="201" r="16"/><path d="M459 217h36"/>
+                  <rect x="552" y="190" width="58" height="34" rx="3" fill="#4a4336"/><path d="M572 190v34M591 190v34"/>
+                  <rect x="563" y="232" width="53" height="112" rx="9" fill="#263d52" stroke="#536879"/>
+                  <path d="M606 240v96M571 269h35M571 305h35" fill="none" stroke="#536879"/>
+                  <rect x="371" y="254" width="64" height="64" rx="10" fill="#284956" stroke="#516f79"/>
+                  <rect x="380" y="262" width="45" height="46" rx="7" fill="none" stroke="#516f79"/>
+                  <rect x="450" y="264" width="90" height="73" rx="15" fill="#2d3127"/>
+                  <circle cx="376" cy="212" r="12" fill="#38483a"/><path d="m370 215 11-10m-4 9-3-8"/>
+                </g>
               </g>
-              <text x="229" y="112" class="room-label" text-anchor="middle">WOHNZIMMER</text><text x="229" y="129" class="room-number" text-anchor="middle">01 / LIVING</text>
-              <text x="516" y="222" class="room-label" text-anchor="middle">SCHLAFZIMMER</text>
-              <text x="490" y="368" class="room-label" text-anchor="middle">KÜCHE / FLUR</text>
+              <text x="199" y="86" class="room-label" text-anchor="middle">SCHLAFZIMMER</text>
+              <text x="485" y="86" class="room-label" text-anchor="middle">WOHNZIMMER</text>
               <g id="pins"></g>
-              <g transform="translate(637 419)" stroke="#8d9a81" fill="none" stroke-width="1"><path d="M0 12V-9m-4 6 4-6 4 6"/><text x="0" y="-15" fill="#8d9a81" stroke="none" font-size="8" text-anchor="middle">N</text></g>
-              <text x="66" y="427" class="room-number">SCHEMATISCHE ANSICHT</text>
+              <text x="64" y="405" class="room-number">SCHEMATISCHE ANSICHT</text>
             </svg>
           </div>
-          <div class="plan-bottom"><div class="legend"><span><i class="dot on-dot"></i>Licht an</span><span><i class="dot off-dot"></i>Licht aus</span></div><span class="plan-hint">Ein Tippen verändert die Stimmung.</span></div>
+          <div class="plan-bottom"><div class="legend"><span><i class="dot on-dot"></i>An</span><span><i class="dot off-dot"></i>Aus</span></div><button id="previewLayout" class="plan-link" type="button">Demo mit deinen Geräten</button></div>
         </section>
         <aside class="controls" aria-labelledby="devicesTitle">
-          <div class="section-heading"><h2 id="devicesTitle">Licht & Steckdosen</h2><span id="deviceCount" class="counter">3 Geräte</span></div>
+          <div class="section-heading"><h2 id="devicesTitle">Geräte</h2><span id="deviceCount" class="counter">6 Geräte</span></div>
           <div id="deviceList" class="device-list"></div>
           <button id="masterOff" class="master"><svg class="icon"><use href="#i-power"/></svg><span><strong>Alles ausschalten</strong><small>Ein Handgriff. Feierabend.</small></span><span class="arrow" aria-hidden="true">↗</span></button>
           <p class="side-note" id="sideNote">Du entdeckst gerade die Demo. Verbinde dein Zuhause über die Einstellungen oben rechts.</p>
         </aside>
       </div>
       <section class="summary" aria-label="Übersicht">
-        <div class="summary-icon"><svg class="icon"><use href="#i-moon"/></svg></div><div><strong id="summaryTitle">Dein Zuhause leuchtet.</strong><p id="summaryText">2 von 3 Steckdosen sind eingeschaltet.</p></div>
+        <div class="summary-icon"><svg class="icon"><use href="#i-moon"/></svg></div><div><strong id="summaryTitle">Dein Zuhause leuchtet.</strong><p id="summaryText">4 von 5 Schaltgeräten sind eingeschaltet.</p></div>
         <div class="summary-time"><span id="lastUpdated">Lokaler Demo-Modus</span><br><button class="refresh" id="refresh"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>Aktualisieren</button></div>
       </section>
     </main>
@@ -84,80 +121,161 @@
     // KONFIGURATION: Render-URL ohne abschließenden Slash eintragen.
     // Leer = sofort nutzbare, deutlich markierte Demo. Niemals einen Token hier eintragen.
     const BACKEND_URL = "https://maison-tapo.onrender.com";
-    // Exakte Alias-Namen aus der Tapo-App zuordnen. Nicht zugeordnete Geräte bleiben als Kacheln bedienbar.
-    const ROOM_ALIASES = { "Stehlampe": "living", "Nachttisch": "bedroom", "Küchenlicht": "kitchen" };
-    const ROOMS = { living: "Wohnzimmer", bedroom: "Schlafzimmer", kitchen: "Küche / Flur", other: "Nicht im Grundriss zugeordnet" };
-    const POSITIONS = { living: [[292,171],[200,318],[296,310],[202,162],[295,230],[201,270]], bedroom: [[431,161],[596,166],[433,208],[596,208]], kitchen: [[550,289],[419,355],[550,338],[420,281]] };
+    // Die Namen müssen den Aliasen in Tapo entsprechen. Demo-Werte gelten nur für die Vorschau.
+    const ROOMS = { bedroom: "Schlafzimmer", living: "Wohnzimmer", other: "Weitere Geräte" };
+    const PROFILE = [
+      {key:"ambient", alias:"Ambientebeleuchtung", room:"bedroom", icon:"bulb", point:[128,227], demoOn:true},
+      {key:"vitrine", alias:"Vitrine", room:"bedroom", icon:"bulb", point:[269,146], demoOn:true},
+      {key:"desk", alias:"Schreibtischlampe", room:"living", icon:"bulb", point:[408,153], demoOn:false},
+      {key:"charger", alias:"Ladegerät", room:"living", icon:"plug", point:[587,153], demoOn:true},
+      {key:"monitor", alias:"Monitor", room:"living", icon:"plug", point:[510,153], demoOn:true},
+      {key:"hub", alias:"Wohnzimmer", room:"living", icon:"hub", caption:"Hub", point:[491,298], demoOn:null},
+    ];
+    const BEDROOM_GROUP = {key:"bedroom-lights", alias:"Schlafzimmer Lights", icon:"group", point:[142,318]};
+    const GROUP_MEMBERS = PROFILE.filter(profile => profile.room === "bedroom");
     const $ = id => document.getElementById(id);
     const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
     let savedUrl = "";
     try { savedUrl = localStorage.getItem("maison.backend") || ""; } catch {}
-    let baseUrl = (BACKEND_URL || savedUrl).replace(/\/+$/, ""), token = "", demo = !baseUrl;
+    let baseUrl = (BACKEND_URL || savedUrl).replace(/\/+$/, ""), token = "";
+    let demo = !baseUrl || new URLSearchParams(location.search).has("demo");
     let devices = [], busy = false, pendingId = null, lastSync = null, restoreFocus = null;
-    const demoDevices = () => [
-      {id:"demo-living",alias:"Stehlampe",model:"P110",on:true,online:true,controllable:true},
-      {id:"demo-bedroom",alias:"Nachttisch",model:"P100",on:false,online:true,controllable:true},
-      {id:"demo-kitchen",alias:"Küchenlicht",model:"P110",on:true,online:true,controllable:true}
-    ];
-    function roomFor(d) {
-      const room = ROOM_ALIASES[d.alias];
-      if (Object.hasOwn(ROOMS, room)) return room;
-      if (/wohnzimmer|living/i.test(d.alias)) return "living";
-      if (/schlafzimmer|bedroom/i.test(d.alias)) return "bedroom";
-      if (/küche|kueche|flur|kitchen/i.test(d.alias)) return "kitchen";
-      return "other";
+    const isHub = d => d.kind === "hub";
+    const demoDevices = () => PROFILE.map(p => ({
+      id:`demo-${p.key}`, alias:p.alias, kind:p.icon === "hub" ? "hub" : "plug",
+      on:p.demoOn, online:p.demoOn !== null, controllable:p.demoOn !== null,
+    }));
+    function matchingDevices(profile) {
+      return devices.filter(d => d.alias === profile.alias && isHub(d) === (profile.icon === "hub"));
+    }
+    function bedroomMembers() {
+      return GROUP_MEMBERS.map(profile => {
+        const matches = matchingDevices(profile);
+        return matches.length === 1 && matches[0].controllable && matches[0].on !== null ? matches[0] : null;
+      });
+    }
+    function statusLabel(d) {
+      if (d.placeholder) return lastSync ? "Nicht gefunden" : "Kein Live-Status";
+      if (isHub(d)) return d.online === true ? "Online" : d.online === false ? "Offline" : "Status unbekannt";
+      return d.on === null ? "Unbekannt" : d.on ? "An" : "Aus";
     }
     function message(text = "") { $("notice").textContent = text; $("notice").hidden = !text; }
     function announce(text) { $("announcement").textContent = text; }
+    function renderControl(d, profile, label, detail, pending, action, parent) {
+      const disabled = busy || !d.controllable;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `device ${profile.icon === "group" ? "group-control" : ""} ${isHub(d) ? "hub" : ""} ${d.on === true ? "on" : ""} ${pending ? "busy" : ""}`;
+      button.dataset.deviceId = d.id;
+      button.disabled = disabled;
+      button.setAttribute("aria-label", `${d.alias}: ${label}${d.controllable ? ". Umschalten" : ""}`);
+      if (d.pressed !== undefined || d.on !== null) button.setAttribute("aria-pressed", String(d.pressed ?? d.on));
+      button.setAttribute("aria-busy", String(pending));
+      const showSwitch = !isHub(d) && !d.placeholder;
+      button.innerHTML = `<span class="device-icon">${icon(profile.icon)}</span><span class="device-copy"><span class="device-name"></span><span class="device-room"></span></span><span class="device-state">${showSwitch ? '<span class="switch"></span>' : ''}<span class="state-label"></span></span>`;
+      button.querySelector(".device-name").textContent = d.alias;
+      button.querySelector(".device-room").textContent = detail;
+      button.querySelector(".state-label").textContent = pending ? "…" : label.toUpperCase();
+      button.addEventListener("click", action);
+      parent.append(button);
+      if (!profile.point) return;
+
+      const [x, y] = profile.point;
+      const pin = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      pin.setAttribute("class", `pin ${isHub(d) ? "hub" : ""} ${d.on === true ? "on" : ""} ${d.placeholder ? "unknown" : ""} ${pending ? "busy" : ""}`);
+      pin.setAttribute("transform", `translate(${x} ${y})`);
+      pin.setAttribute("role", isHub(d) ? "img" : "button");
+      pin.setAttribute("aria-label", button.getAttribute("aria-label"));
+      pin.dataset.deviceId = d.id;
+      if (!isHub(d)) {
+        pin.setAttribute("tabindex", disabled ? "-1" : "0");
+        pin.setAttribute("aria-disabled", String(disabled));
+        if (button.hasAttribute("aria-pressed")) pin.setAttribute("aria-pressed", button.getAttribute("aria-pressed"));
+        pin.addEventListener("click", action);
+        pin.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); action(); } });
+      }
+      pin.innerHTML = `<circle r="25" fill="transparent"/><circle class="base" r="18"/><g class="bulb" transform="translate(-10,-10) scale(.85)"><use href="#i-${profile.icon}" width="24" height="24"/></g><text class="map-caption" y="35"></text>`;
+      pin.querySelector(".map-caption").textContent = isHub(d) && !d.placeholder ? `Hub · ${label}` : profile.caption || d.alias;
+      const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      title.textContent = `${d.alias} · ${label}`;
+      pin.append(title);
+      $("pins").append(pin);
+    }
+
+    function renderRooms() {
+      const placed = new Set();
+      for (const room of ["bedroom", "living", "other"]) {
+        const section = document.createElement("section");
+        section.className = "room-devices";
+        const heading = document.createElement("h3");
+        heading.textContent = ROOMS[room];
+        section.append(heading);
+        let parent = section;
+        if (room === "bedroom") {
+          parent = document.createElement("div");
+          parent.className = "light-group";
+          section.append(parent);
+          const members = bedroomMembers();
+          const ready = members.every(Boolean);
+          const onCount = members.filter(member => member?.on === true).length;
+          const group = {id:BEDROOM_GROUP.key, alias:BEDROOM_GROUP.alias, controllable:ready,
+                         on:ready ? onCount === members.length : null, pressed:ready && onCount === 1 ? "mixed" : undefined};
+          const label = ready && onCount === 1 ? "Teilweise an" : statusLabel(group);
+          renderControl(group, BEDROOM_GROUP, label, "2 Lichter gemeinsam schalten", pendingId === group.id, toggleBedroom, parent);
+        }
+        for (const profile of PROFILE.filter(p => p.room === room)) {
+          const matches = matchingDevices(profile);
+          if (!matches.length) {
+            matches.push({id:`missing-${profile.key}`, alias:profile.alias, kind:profile.icon === "hub" ? "hub" : "plug",
+                          on:null, online:null, controllable:false, placeholder:true});
+          }
+          matches.forEach((device, index) => {
+            placed.add(device.id);
+            const decoration = index === 0 ? profile : {...profile, point:null};
+            const pending = pendingId === device.id || (!isHub(device) && pendingId === "all") || (room === "bedroom" && pendingId === BEDROOM_GROUP.key);
+            const detail = device.error || (isHub(device) ? "Hub · Statusanzeige" : profile.icon === "bulb" ? "Beleuchtung" : "Steckdose");
+            renderControl(device, decoration, statusLabel(device), detail, pending, () => toggle(device.id), parent);
+          });
+        }
+        if (room === "other") {
+          const extra = devices.filter(d => !placed.has(d.id));
+          if (!extra.length) continue;
+          for (const device of extra) {
+            const hub = isHub(device);
+            renderControl(device, {icon:hub ? "hub" : "plug"}, statusLabel(device), device.error || (hub ? "Hub" : "Steckdose"),
+                          pendingId === device.id || (!hub && pendingId === "all"), () => toggle(device.id), parent);
+          }
+        }
+        $("deviceList").append(section);
+      }
+    }
+
     function render() {
       const focused = restoreFocus?.id || document.activeElement?.dataset?.deviceId;
       const focusPin = restoreFocus?.pin ?? document.activeElement?.classList?.contains("pin");
-      $("connectionLabel").textContent = demo ? "Demo · zum Entdecken" : busy ? "Zuhause wird synchronisiert …" : !token ? "Verbindung einrichten" : lastSync ? "Mit deinem Zuhause verbunden" : "Verbindung prüfen";
-      $("deviceCount").textContent = `${devices.length} Geräte`;
+      $("connectionLabel").textContent = demo ? "Demo · mit deinen Geräten" : busy ? "Zuhause wird synchronisiert …" : !token ? "Verbindung einrichten" : lastSync ? "Mit deinem Zuhause verbunden" : "Verbindung prüfen";
+      $("deviceCount").textContent = demo ? `${devices.length} Geräte · Demo` : lastSync ? `${devices.length} gefunden` : `${PROFILE.length} eingerichtet`;
       $("deviceList").replaceChildren(); $("pins").replaceChildren();
-      const occupied = {living:0, bedroom:0, kitchen:0};
-      for (const d of devices) {
-        const room = roomFor(d), loading = busy && (pendingId === d.id || pendingId === "all");
-        const label = d.on === null ? "Unbekannt" : d.on ? "An" : "Aus";
-        const button = document.createElement("button");
-        button.className = `device ${d.on === true ? "on" : ""} ${loading ? "busy" : ""}`;
-        button.dataset.deviceId = d.id; button.disabled = busy || !d.controllable;
-        button.setAttribute("aria-label", `${d.alias}: ${label}${d.controllable ? ". Umschalten" : ". " + (d.error || "Nicht verfügbar")}`);
-        if (d.on !== null) button.setAttribute("aria-pressed", String(d.on));
-        button.setAttribute("aria-busy", String(loading));
-        button.innerHTML = `<span class="device-icon">${icon("bulb")}</span><span class="device-copy"><span class="device-name"></span><span class="device-room"></span></span><span class="device-state"><span class="switch"></span><span class="state-label"></span></span>`;
-        button.querySelector(".device-name").textContent = d.alias;
-        button.querySelector(".device-room").textContent = d.error || ROOMS[room];
-        button.querySelector(".state-label").textContent = loading ? "…" : label.toUpperCase();
-        button.addEventListener("click", () => toggle(d.id)); $("deviceList").append(button);
-        const pos = POSITIONS[room]?.[occupied[room]++];
-        if (!pos) continue;
-        const pin = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        pin.setAttribute("class", `pin ${d.on === true ? "on" : ""} ${d.on === null ? "unknown" : ""} ${loading ? "busy" : ""}`);
-        pin.setAttribute("transform", `translate(${pos[0]} ${pos[1]})`);
-        pin.setAttribute("role", "button"); pin.setAttribute("tabindex", busy || !d.controllable ? "-1" : "0");
-        pin.dataset.deviceId = d.id; pin.setAttribute("aria-label", button.getAttribute("aria-label"));
-        pin.setAttribute("aria-disabled", String(busy || !d.controllable));
-        if (d.on !== null) pin.setAttribute("aria-pressed", String(d.on));
-        pin.innerHTML = '<circle r="25" fill="transparent"/><circle class="base" r="18"/><g class="bulb" transform="translate(-10,-11) scale(.85)"><use href="#i-bulb" width="24" height="24"/></g>';
-        const title = document.createElementNS("http://www.w3.org/2000/svg", "title"); title.textContent = `${d.alias} · ${label}`; pin.append(title);
-        pin.addEventListener("click", () => toggle(d.id));
-        pin.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(d.id); } });
-        $("pins").append(pin);
+      renderRooms();
+      for (const room of ["bedroom", "living"]) {
+        const lights = PROFILE.filter(p => p.room === room && p.icon === "bulb");
+        $("glow-" + room).classList.toggle("on", lights.some(p => matchingDevices(p).some(d => d.on === true)));
       }
-      for (const room of Object.keys(POSITIONS)) $("glow-" + room).classList.toggle("on", devices.some(d => roomFor(d) === room && d.on === true));
-      if (!devices.length) { const empty = document.createElement("p"); empty.className = "empty"; empty.textContent = !demo && !token ? "Verbinde dein Zuhause über die Einstellungen oben rechts." : busy ? "Dein Zuhause wird geladen …" : "Keine Tapo-Steckdosen gefunden. Konto, Geräte und Cloud-Verbindung prüfen."; $("deviceList").append(empty); }
-      const on = devices.filter(d => d.on === true).length, unknown = devices.filter(d => d.on === null).length;
-      $("summaryTitle").textContent = !devices.length ? "Dein Zuhause wartet." : unknown ? "Ein Blick auf die Verbindung." : on ? "Dein Zuhause leuchtet." : "Zeit, zur Ruhe zu kommen.";
-      $("summaryText").textContent = devices.length ? `${on} von ${devices.length} Steckdosen sind eingeschaltet.${unknown ? ` ${unknown} Status unbekannt.` : ""}` : "Verbinde deine Steckdosen und mach es dir gemütlich.";
-      $("lastUpdated").textContent = demo ? "Lokaler Demo-Modus" : lastSync ? "Stand " + lastSync.toLocaleTimeString("de-DE", {hour:"2-digit",minute:"2-digit"}) : "Noch nicht synchronisiert";
-      $("masterOff").disabled = busy || !devices.length || (!demo && !token);
+      const switches = devices.filter(d => !isHub(d));
+      const on = switches.filter(d => d.on === true).length;
+      const unknown = switches.filter(d => d.on === null).length;
+      $("summaryTitle").textContent = !switches.length ? "Dein Zuhause im Plan." : unknown ? "Ein Blick auf die Verbindung." : on ? "Dein Zuhause ist aktiv." : "Zeit, zur Ruhe zu kommen.";
+      $("summaryText").textContent = switches.length ? `${on} von ${switches.length} Schaltgeräten sind eingeschaltet.${unknown ? ` ${unknown} Status unbekannt.` : ""}` : "Verbinde Tapo, um die aktuellen Zustände zu sehen.";
+      $("lastUpdated").textContent = demo ? "Demo-Stand · lokal" : lastSync ? "Stand " + lastSync.toLocaleTimeString("de-DE", {hour:"2-digit",minute:"2-digit"}) : "Noch nicht synchronisiert";
+      $("masterOff").disabled = busy || !switches.length || (!demo && !token);
       $("refresh").disabled = busy || (!demo && !token);
       $("settings").disabled = busy;
-      $("sideNote").textContent = demo ? "Du entdeckst gerade die Demo. Verbinde dein Zuhause über die Einstellungen oben rechts." : "Master Off schaltet alle gefundenen Tapo-Steckdosen aus. Zusätzliche Geräte findest du als Kacheln; Raumzuordnung im HTML konfigurierbar.";
+      $("previewLayout").hidden = demo;
+      $("previewLayout").disabled = busy;
+      $("sideNote").textContent = demo ? "Die Demo zeigt deine angegebenen Zustände. Schalten verändert hier nur die Vorschau." : "Alles ausschalten wirkt auf die gefundenen Steckdosen. Der Hub zeigt seinen Verbindungsstatus an.";
       if (focused && !busy) {
         const container = focusPin ? $("pins") : $("deviceList");
-        [...container.children].find(el => el.dataset.deviceId === focused)?.focus();
+        [...container.querySelectorAll("[data-device-id]")].find(el => el.dataset.deviceId === focused)?.focus();
         restoreFocus = null;
       }
     }
@@ -175,7 +293,7 @@
         throw error;
       } finally { clearTimeout(timer); }
     }
-    function markUnknown(ids = devices.map(d => d.id)) { devices = devices.map(d => ids.includes(d.id) ? {...d, on:null, online:false, controllable:false, error:"Status erneut abrufen"} : d); lastSync = null; }
+    function markUnknown(ids = devices.map(d => d.id)) { devices = devices.map(d => ids.includes(d.id) ? {...d, on:null, online:null, controllable:false, error:"Status erneut abrufen"} : d); lastSync = null; }
     function validateDevices(data) {
       if (!Array.isArray(data) || data.some(d => typeof d.id !== "string" || typeof d.alias !== "string" || ![true,false,null].includes(d.on) || typeof d.controllable !== "boolean")) throw new Error("Das Backend liefert ein unerwartetes Geräteformat.");
       return data;
@@ -198,25 +316,42 @@
       } catch (error) { markUnknown([id]); message(error.message); }
       finally { busy = false; pendingId = null; render(); }
     }
-    async function allOff() {
-      if (busy || !devices.length) return;
-      let allConfirmed = true;
-      busy = true; pendingId = "all"; message(); render();
+    async function setBatch(targets, desired, id, path, confirmation) {
+      if (busy || !targets.length || (!demo && !token)) return;
+      const ids = new Set(targets.map(d => d.id));
+      restoreFocus = {id, pin:document.activeElement?.classList?.contains("pin") || false};
+      busy = true; pendingId = id; message(); render();
       try {
-        if (demo) { await new Promise(r => setTimeout(r, 400)); devices = devices.map(d => ({...d,on:false})); }
-        else {
-          const result = await api("/api/devices/off", "POST");
+        if (demo) {
+          await new Promise(resolve => setTimeout(resolve, 350));
+          devices = devices.map(d => ids.has(d.id) ? {...d,on:desired} : d);
+          announce(confirmation);
+        } else {
+          const result = await api(path, "POST");
           if (!Array.isArray(result.results)) throw new Error("Unvollständige Antwort. Bitte Status aktualisieren.");
-          const outcomes = new Map(result.results.map(r => [r.id,r]));
-          devices = devices.map(d => outcomes.get(d.id)?.success ? validateDevices([outcomes.get(d.id).device])[0] : {...d,on:null,online:false,controllable:false,error:"Ausschalten nicht bestätigt"});
-          const failed = result.results.filter(r => !r.success);
-          if (failed.length) message(`Nicht alle Geräte konnten ausgeschaltet werden: ${failed.map(r => r.alias).join(", ")}. Bitte aktualisieren.`);
-          else if (devices.some(d => d.on === null)) message("Die Geräteliste hat sich geändert. Bitte aktualisieren.");
-          if (failed.length || devices.some(d => d.on === null)) { lastSync = null; allConfirmed = false; }
+          const confirmed = validateDevices(result.results.filter(row => row.success).map(row => row.device));
+          const byId = new Map(confirmed.map(d => [d.id, d]));
+          devices = devices.map(d => byId.get(d.id) || d);
+          const failed = targets.filter(d => !byId.has(d.id));
+          if (result.success && !failed.length) announce(confirmation);
+          else {
+            markUnknown(failed.map(d => d.id));
+            const names = [...new Set([...failed.map(d => d.alias), ...result.results.filter(row => !row.success).map(row => row.alias)])];
+            message(`Schaltstatus nicht bestätigt: ${names.join(", ")}. Bitte aktualisieren.`);
+          }
         }
-        announce(allConfirmed && devices.every(d => d.on === false) ? "Alle Steckdosen sind ausgeschaltet." : "Ausschalten teilweise unbestätigt.");
-      } catch (error) { markUnknown(); message(error.message); }
+      } catch (error) { markUnknown([...ids]); message(error.message); }
       finally { busy = false; pendingId = null; render(); }
+    }
+    function allOff() {
+      return setBatch(devices.filter(d => !isHub(d)), false, "all", "/api/devices/off", "Alle Steckdosen sind ausgeschaltet.");
+    }
+    function toggleBedroom() {
+      const members = bedroomMembers();
+      if (members.some(member => !member)) return;
+      const desired = !members.every(member => member.on);
+      return setBatch(members, desired, BEDROOM_GROUP.key, `/api/groups/bedroom-lights/${desired ? "on" : "off"}`,
+                      `Schlafzimmer Lights ${desired ? "eingeschaltet" : "ausgeschaltet"}.`);
     }
     function openSettings() { $("backendInput").value = baseUrl; $("tokenInput").value = ""; $("configDialog").showModal(); }
     $("settings").addEventListener("click", openSettings);
@@ -233,7 +368,14 @@
     });
     $("backendInput").addEventListener("input", () => $("backendInput").setCustomValidity(""));
     $("configDialog").addEventListener("close", () => { $("tokenInput").value = ""; });
-    $("demoButton").addEventListener("click", () => { demo = true; token = ""; devices = demoDevices(); lastSync = null; message(); $("configDialog").close(); render(); });
+    function openDemo() {
+      if (busy) return;
+      demo = true; token = ""; devices = demoDevices(); lastSync = null; message();
+      if ($("configDialog").open) $("configDialog").close();
+      render();
+    }
+    $("demoButton").addEventListener("click", openDemo);
+    $("previewLayout").addEventListener("click", openDemo);
     function updateClock() { const now = new Date(); $("clock").textContent = now.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}); $("clock").dateTime = now.toISOString(); $("headerDate").textContent = now.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long"}); }
     updateClock(); setInterval(updateClock, 10000);
     setInterval(() => { if (!demo && token && lastSync && !busy && !document.hidden) refresh(); }, 45000);

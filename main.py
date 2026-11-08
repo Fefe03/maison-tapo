@@ -6,6 +6,8 @@ No credentials, cloud exception bodies or cloud tokens are sent to the browser.
 """
 
 import asyncio
+from base64 import b64decode
+from binascii import Error as Base64Error
 import os
 import re
 import secrets
@@ -22,6 +24,29 @@ from fastapi.responses import FileResponse
 from tplinkcloud import TPLinkDeviceManager, TPLinkAuthError, TPLinkMFARequiredError, TPLinkCloudError
 from tplinkcloud.api_response import TPLinkApiResponse
 from tplinkcloud.client import TPLinkApi
+
+BEDROOM_LIGHTS = ("Ambientebeleuchtung", "Vitrine")
+
+
+def device_alias(device):
+    alias = device.get_alias() or device.device_id
+    if getattr(device, "cloud_type", None) == "tapo":
+        try:
+            decoded = b64decode(alias, validate=True).decode("utf-8")
+            if decoded.isprintable() and decoded.strip():
+                return decoded
+        except (Base64Error, UnicodeError, ValueError):
+            pass
+    return alias
+
+
+def device_kind(device):
+    model = device.device_info.device_model or ""
+    if re.match(r"^P\d", model):
+        return "plug"
+    if re.match(r"^H\d", model):
+        return "hub"
+    return None
 
 
 class TapoApi(TPLinkApi):
@@ -91,8 +116,7 @@ class Cloud:
                 raise HTTPException(*failure) from None
             self.login_failure = None
         devices = await self.manager.get_devices()
-        # Only P-series sockets: exclude cameras, hubs and other account devices.
-        return [d for d in devices if re.match(r"^P\d", d.device_info.device_model or "")]
+        return [d for d in devices if device_kind(d)]
 
     async def status(self, device):
         try:
@@ -104,41 +128,58 @@ class Cloud:
             return None, "Status nicht verfügbar"
 
     async def row(self, device, duplicates=()):
+        kind = device_kind(device)
+        alias = device_alias(device)
+        if kind == "hub":
+            cloud_status = getattr(device.device_info, "status", None)
+            online = True if cloud_status in (1, "1") else False if cloud_status in (0, "0") else None
+            return {"id": device.device_id, "alias": alias, "model": device.device_info.device_model,
+                    "kind": kind, "on": None, "online": online, "controllable": False, "error": None}
         state, error = await self.status(device)
-        alias = device.get_alias() or device.device_id
         duplicate = alias in duplicates
         return {
             "id": device.device_id,
             "alias": alias,
             "model": device.device_info.device_model,
+            "kind": kind,
             "on": state,
             "online": state is not None,
             "controllable": state is not None and not duplicate,
             "error": "Alias mehrfach vergeben – in der Tapo-App umbenennen" if duplicate else error,
         }
 
+    async def set_power(self, devices, desired, duplicates):
+        async def set_one(device):
+            name = device_alias(device)
+            result = {"id": device.device_id, "alias": name}
+            try:
+                command = device.power_on if desired else device.power_off
+                await asyncio.wait_for(command(), timeout=12)
+                row = await self.row(device, duplicates)
+                if row["on"] is desired:
+                    return {**result, "success": True, "device": row}
+            except Exception:
+                pass
+            return {**result, "success": False, "error": "Schaltstatus nicht bestätigt. Status erneut abrufen."}
+
+        results = await asyncio.gather(*(set_one(device) for device in devices))
+        return {"success": all(result["success"] for result in results), "results": results}
+
     async def perform(self, action, alias=None):
         devices = await self.devices()
-        aliases = Counter(d.get_alias() or d.device_id for d in devices)
+        plugs = [device for device in devices if device_kind(device) == "plug"]
+        aliases = Counter(device_alias(device) for device in plugs)
         duplicates = {name for name, count in aliases.items() if count > 1}
         if action == "list":
             return await asyncio.gather(*(self.row(d, duplicates) for d in devices))
         if action == "off":
-            # Explicit power_off, never toggle; include unavailable devices in failures.
-            async def turn_off(d):
-                name = d.get_alias() or d.device_id
-                try:
-                    await asyncio.wait_for(d.power_off(), timeout=12)
-                    row = await self.row(d, duplicates)
-                    if row["on"] is not False:
-                        raise ValueError("Off not confirmed")
-                    return {"id": d.device_id, "alias": name, "success": True, "device": row}
-                except Exception:
-                    return {"id": d.device_id, "alias": name, "success": False,
-                            "error": "Ausschalten nicht bestätigt. Status erneut abrufen."}
-            results = await asyncio.gather(*(turn_off(d) for d in devices))
-            return {"success": all(r["success"] for r in results), "results": results}
-        matches = [d for d in devices if (d.get_alias() or d.device_id) == alias]
+            return await self.set_power(plugs, False, duplicates)
+        if action in ("bedroom-on", "bedroom-off"):
+            if any(aliases[name] != 1 for name in BEDROOM_LIGHTS):
+                raise HTTPException(409, "Beide Schlafzimmerlichter müssen genau einmal gefunden werden.")
+            lights = [device for device in plugs if device_alias(device) in BEDROOM_LIGHTS]
+            return await self.set_power(lights, action == "bedroom-on", duplicates)
+        matches = [device for device in plugs if device_alias(device) == alias]
         if not matches:
             raise HTTPException(404, "Gerät nicht gefunden. Liste aktualisieren.")
         if len(matches) != 1:
@@ -233,6 +274,12 @@ def create_app(cloud=None):
     @app.post("/api/devices/off", dependencies=[Depends(authorize)])
     async def all_off():
         return await run("off")
+
+    @app.post("/api/groups/bedroom-lights/{state}", dependencies=[Depends(authorize)])
+    async def bedroom_lights(state: str):
+        if state not in ("on", "off"):
+            raise HTTPException(422, "Schaltzustand muss on oder off sein.")
+        return await run(f"bedroom-{state}")
 
     @app.post("/api/device/{alias:path}/toggle", dependencies=[Depends(authorize)])
     async def toggle(alias: str):

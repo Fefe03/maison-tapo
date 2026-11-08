@@ -41,17 +41,9 @@ Lokal kannst du dieselbe HTML-Datei oder den Webserver aus Schritt 1 nutzen. Auf
 
 ## Raumzuordnung
 
-Die Namen in `ROOM_ALIASES` müssen den eindeutigen Alias-Namen in der Tapo-App entsprechen:
+`PROFILE` in `index.html` ordnet die Tapo-Aliase den zwei schematischen Raumansichten zu. Im Schlafzimmer sind Ambientebeleuchtung und Vitrine einzeln und über „Schlafzimmer Lights“ schaltbar. Im Wohnzimmer stehen Schreibtischlampe, Ladegerät, Monitor und der Hub „Wohnzimmer“. Geräte mit anderen Aliasen erscheinen unter „Weitere Geräte“. Der Hub zeigt seinen Verbindungsstatus und nimmt an keiner Schaltaktion teil.
 
-```javascript
-const ROOM_ALIASES = {
-  "Meine Stehlampe": "living",
-  "Meine Nachttischlampe": "bedroom",
-  "Licht Küche": "kitchen"
-};
-```
-
-Alternativ werden Namen mit „Wohnzimmer“, „Schlafzimmer“, „Küche“ oder „Flur“ automatisch zugeordnet. Unbekannte Namen bleiben als Kachel sichtbar. Der schematische Plan bietet sechs Pins im Wohnzimmer und je vier in den anderen Räumen; weitere Geräte erscheinen nur als Kachel. Die Pin-Koordinaten stehen in `POSITIONS`. Alle gefundenen Steckdosen werden von „Alles ausschalten“ erfasst, unabhängig von ihrer Raumzuordnung.
+Mit `?demo` oder „Demo entdecken“ öffnet sich die lokale Vorschau mit den angegebenen Schaltzuständen. Im Live-Modus kommen die Zustände vom Server. Wenn ein eingerichtetes Gerät nicht gefunden wird, bleibt sein Platz im Plan mit einer entsprechenden Statusanzeige sichtbar.
 
 ## Backend lokal betreiben
 
@@ -74,9 +66,10 @@ Alle `/api/…`-Aufrufe benötigen `Authorization: Bearer <DASHBOARD_TOKEN>`.
 
 | Endpunkt | Ergebnis |
 |---|---|
-| `GET /api/devices` | Liste mit `id`, `alias`, `model`, `on`, `online`, `controllable`, `error` |
+| `GET /api/devices` | Liste mit `id`, `alias`, `model`, `kind`, `on`, `online`, `controllable`, `error` |
 | `POST /api/device/{alias}/toggle` | Schaltet einmal und liest den neuen Zustand zurück; Alias URL-kodieren |
 | `POST /api/devices/off` | Setzt alle gefundenen Steckdosen auf Aus, mit Erfolg/Fehler pro Gerät |
+| `POST /api/groups/bedroom-lights/{state}` | Setzt Ambientebeleuchtung und Vitrine auf `on` oder `off`, wenn beide Namen jeweils genau einmal vorkommen |
 | `GET /health` | Webserver erreichbar, öffentlich |
 
 `on: null` bedeutet **unbekannt**, nicht „aus“. Doppelte Alias-Namen blockieren Einzel-Toggles. Während eines Cloud-Aufrufs werden weitere Cloud-Anfragen mit 409 abgewiesen; der Webserver bleibt erreichbar. Nach unbestätigten Schreibzugriffen gibt es keinen automatischen Toggle-Retry. Master Off kann bei nicht erreichbaren Geräten nur teilweise erfolgreich sein und meldet dies ausdrücklich. Der sichtbare Live-Tab aktualisiert alle 45 Sekunden; im Hintergrund pausiert die Abfrage.
@@ -84,7 +77,7 @@ Alle `/api/…`-Aufrufe benötigen `Authorization: Bearer <DASHBOARD_TOKEN>`.
 ## Grenzen dieses Tests
 
 - Verwendet die geprüfte Bibliotheksversion `tplink-cloud-api==5.2.2`, deren Projekt Tapo-Cloud-Steuerung dokumentiert. Die tatsächliche Funktion hängt von Modell, Firmware und TP-Link-Cloud ab; ein Test mit echten Geräten ist erforderlich. [Bibliothek](https://github.com/piekstra/tplink-cloud-api).
-- Bewusst auf Tapo-Steckdosen der P-Serie begrenzt. Kameras und Hubs werden nicht geschaltet. Mehrfachsteckdosen mit einzeln adressierbaren Ausgängen sind hier nicht implementiert.
+- Die Schaltfunktionen verwenden Tapo-Steckdosen der P-Serie. Hubs der H-Serie erscheinen mit ihrem Cloud-Verbindungsstatus. Mehrfachsteckdosen mit einzeln adressierbaren Ausgängen und eigenständige Leuchtmittel sind hier nicht implementiert.
 - Für TP-Link-Konten mit interaktiver MFA ist ein zusätzlicher Anmeldungs- und Token-Speicher-Flow nötig. Der Minimalserver implementiert diesen nicht und meldet Anmeldefehler; er fordert nicht zum Deaktivieren von MFA auf.
 - Ein Serverprozess / eine Instanz: `--workers 1` beibehalten, damit die Schalt-Sperre gilt. Kein Mehrbenutzer- oder Dauerbetriebssystem.
 - CORS erlaubt standardmäßig jede Origin. Die API bleibt durch den Zugangsschlüssel geschützt. Eine öffentliche HTML-Datei enthält nur die Backend-URL, keine Geheimnisse. Optional `CORS_ORIGINS` auf konkrete Origins begrenzen, durch Kommas getrennt (keine URL-Pfade).

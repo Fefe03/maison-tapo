@@ -148,6 +148,41 @@ class BackendTests(unittest.TestCase):
             self.assertIs(self.b.state, False)
         self.assertEqual(self.b.commands, ["off", "off"])
 
+    def test_bedroom_group_targets_only_named_plugs_and_leaves_hub_read_only(self):
+        from base64 import b64encode
+
+        ambient = Device(b64encode(b"Ambientebeleuchtung").decode(), True)
+        ambient.cloud_type = "tapo"
+        vitrine = Device("Vitrine", False)
+        hub = Device("Wohnzimmer", None, "H100")
+        hub.device_info.status = 0
+        self.cloud.manager.items.extend([ambient, vitrine, hub])
+
+        listed = self.client.get("/api/devices", headers=HEADERS).json()
+        self.assertEqual(listed[-3]["alias"], "Ambientebeleuchtung")
+        self.assertEqual((listed[-1]["kind"], listed[-1]["online"], listed[-1]["controllable"]),
+                         ("hub", False, False))
+        path = "/api/groups/bedroom-lights/on"
+        self.assertEqual(self.client.post(path).status_code, 401)
+        response = self.client.post(path, headers=HEADERS)
+        self.assertTrue(response.json()["success"])
+        self.assertEqual(ambient.commands, ["on"])
+        self.assertEqual(vitrine.commands, ["on"])
+        self.assertEqual(self.a.commands, [])
+        self.assertEqual(self.b.commands, [])
+        self.assertEqual(self.toggle("Wohnzimmer").status_code, 404)
+        self.client.post("/api/devices/off", headers=HEADERS)
+        self.assertEqual(hub.commands, [])
+
+    def test_bedroom_group_refuses_partial_or_ambiguous_matches(self):
+        ambient = Device("Ambientebeleuchtung")
+        self.cloud.manager.items.append(ambient)
+        path = "/api/groups/bedroom-lights/off"
+        self.assertEqual(self.client.post(path, headers=HEADERS).status_code, 409)
+        self.cloud.manager.items.extend([Device("Vitrine", device_id="v1"), Device("Vitrine", device_id="v2")])
+        self.assertEqual(self.client.post(path, headers=HEADERS).status_code, 409)
+        self.assertEqual(ambient.commands, [])
+
     def test_partial_failure_does_not_claim_all_off(self):
         self.a.fail_write = True
         r = self.client.post("/api/devices/off", headers=HEADERS).json()
