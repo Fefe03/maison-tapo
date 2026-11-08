@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121613">
+  <title>MAISON — Dein Zuhause, in Ruhe.</title>
+  <meta name="description" content="Ein ruhiger Ort für dein Smart Home. Tapo-Steckdosen auf einen Blick steuern.">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#121613;--panel:#181d19;--line:#30372f;--ink:#f0eee5;--muted:#a2a99e;--gold:#d7ba7d;--green:#a6bd9a}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.45}button:focus-visible,a:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px solid var(--gold);outline-offset:5px}button{color:inherit}a{color:var(--gold)}.shell{max-width:1440px;margin:auto;padding:0 64px}header{height:102px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:13px;letter-spacing:6px;font-size:18px}.brand-mark{width:31px;height:34px;color:var(--gold)}.header-right{display:flex;align-items:center;gap:30px}.eyebrow{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;font-weight:600;color:var(--muted)}.header-date{color:var(--muted);font-size:12px}.icon-btn{border:1px solid var(--line);background:transparent;border-radius:50%;width:39px;height:39px;display:inline-flex;align-items:center;justify-content:center}.icon-btn:hover{border-color:var(--gold);color:var(--gold)}svg.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.intro{display:flex;align-items:flex-end;justify-content:space-between;padding:47px 0 36px;gap:20px}h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(34px,4vw,51px);line-height:1.15;letter-spacing:-1.6px;font-weight:400;margin:14px 0 15px}.intro p{color:var(--muted);margin:0;font-size:13px;line-height:1.7}.connection{display:flex;align-items:center;gap:9px;border:1px solid #434735;padding:10px 15px;border-radius:30px;color:var(--gold);font-size:11px;white-space:nowrap}.dot{width:6px;height:6px;display:inline-block;border-radius:50%;background:currentColor}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}.plan-panel{background:linear-gradient(140deg,#1c211c,#171c18);border:1px solid var(--line);border-radius:8px;overflow:hidden}.panel-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:25px 28px}.panel-title{font-size:14px;font-weight:400;letter-spacing:.3px;margin:0}.level{font-size:10px;color:var(--muted);letter-spacing:1.5px}.plan-wrap{padding:0 18px;position:relative}.floorplan{display:block;width:100%;height:auto;min-height:260px}.walls{fill:none;stroke:#86917d;stroke-width:3}.furniture{fill:#242b23;stroke:#53604f;stroke-width:1.2}.furniture-line{stroke:#53604f;stroke-width:1.2;fill:none}.room-label{fill:#a2ac9b;font-size:10px;letter-spacing:2px;font-family:Arial,sans-serif}.room-number{fill:#626e5e;font-size:9px;font-family:Arial,sans-serif;letter-spacing:1.3px}.pin{cursor:pointer;outline:none}.pin circle.base{fill:#232b24;stroke:#768371;stroke-width:1.2;transition:fill .25s}.pin .bulb{fill:none;stroke:#c1c9ba;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.pin.on circle.base{fill:#d7ba7d;stroke:#f5dba6;filter:drop-shadow(0 0 10px #d8ba7d88)}.pin.on .bulb{stroke:#343225}.pin:hover circle.base,.pin:focus-visible circle.base{stroke:#fff;stroke-width:2.5}.pin.unknown{opacity:.45}.pin.busy .base{stroke-dasharray:4 4;animation:pulse 1s infinite}.room-glow{opacity:0;transition:opacity .5s}.room-glow.on{opacity:1}.plan-bottom{padding:22px 28px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:11px;color:var(--muted)}.legend{display:flex;gap:20px}.legend span{display:flex;gap:7px;align-items:center}.legend .on-dot{background:var(--gold)}.legend .off-dot{background:#687461}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:3px 0 19px}.section-heading h2{font-size:14px;font-weight:400;margin:0}.counter{font-size:11px;color:var(--muted)}.device-list{display:grid;gap:11px}.device{width:100%;border:1px solid var(--line);border-radius:6px;padding:19px 18px;background:var(--panel);display:flex;gap:15px;align-items:center;text-align:left;transition:border-color .2s,background .2s}.device.on{background:linear-gradient(105deg,#282c22,#1d231d);border-color:#5a5940}.device:hover:not(:disabled){border-color:#a5946c}.device-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:#242c24;border-radius:50%;color:#a4ae9e;flex-shrink:0}.device.on .device-icon{background:#3c3d29;color:var(--gold)}.device-copy{flex:1;min-width:0}.device-name{display:block;font-size:12px;margin-bottom:7px;overflow-wrap:anywhere}.device-room{display:block;font-size:10px;color:var(--muted)}.device-state{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:9px;letter-spacing:.6px;color:var(--muted)}.device.on .device-state{color:var(--gold)}.switch{display:block;width:31px;height:18px;border-radius:12px;background:#414b3f;padding:3px}.switch:after{content:'';display:block;width:12px;height:12px;border-radius:50%;background:#abb2a5;transition:transform .2s}.device.on .switch{background:#d7ba7d}.device.on .switch:after{background:#292d22;transform:translateX(13px)}.device.busy .switch{animation:pulse .8s infinite}.master{width:100%;display:flex;align-items:center;text-align:left;gap:14px;padding:20px 18px;border:1px solid #5d604a;border-radius:6px;background:transparent;margin-top:24px}.master:hover:not(:disabled){background:#242b22;border-color:var(--gold)}.master .icon{color:var(--gold);width:23px;height:23px}.master strong{font-size:12px;font-weight:400;display:block;margin-bottom:7px}.master small{font-size:10px;color:var(--muted)}.arrow{margin-left:auto;color:var(--gold);font-size:20px}.side-note{font-size:10px;color:var(--muted);line-height:1.7;margin:17px 2px}.summary{display:flex;align-items:center;gap:23px;margin-top:27px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.summary-icon{color:var(--gold);width:39px;height:39px;border:1px solid #464b36;border-radius:50%;display:flex;align-items:center;justify-content:center}.summary strong{font-size:13px;font-weight:400;display:block;margin-bottom:6px}.summary p{margin:0;font-size:11px;color:var(--muted)}.summary-time{margin-left:auto;text-align:right;color:var(--muted);font-size:10px;line-height:1.8}.refresh{display:flex;align-items:center;gap:8px;border:none;background:none;font-size:11px;color:var(--muted)}.refresh:hover{color:var(--gold)}footer{display:flex;justify-content:space-between;align-items:center;padding:29px 0 30px;color:#929d8c;font-size:9px;letter-spacing:1.5px}.footer-brand{letter-spacing:3px;color:#b1b9a8}.notice{padding:13px 16px;border:1px solid #8d684d;background:#34281f;color:#f3c5a0;border-radius:6px;line-height:1.6;font-size:12px;margin:0 0 20px}.notice[hidden]{display:none}.empty{border:1px dashed var(--line);padding:24px;color:var(--muted);font-size:12px;line-height:1.8;border-radius:6px}dialog{width:min(440px,calc(100% - 32px));background:#1c231d;color:var(--ink);border:1px solid #59634d;border-radius:12px;padding:30px;box-shadow:0 30px 100px #0008}dialog::backdrop{background:#080c09cc;backdrop-filter:blur(6px)}dialog h2{font-family:Georgia,serif;font-weight:400;font-size:28px;margin:0 0 12px}dialog p{color:var(--muted);font-size:12px;line-height:1.8}dialog label{display:block;margin-top:20px;font-size:11px;color:var(--muted)}dialog input{width:100%;display:block;margin-top:8px;border:1px solid #46513f;border-radius:5px;padding:12px;background:#121813;color:var(--ink)}.dialog-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}.primary,.secondary{border-radius:5px;padding:12px 15px;font-size:12px}.primary{background:var(--gold);color:#23271d;border:1px solid var(--gold)}.secondary{background:none;border:1px solid #59634d}.dialog-close{position:absolute;right:18px;top:17px;border:0;background:none;color:var(--muted);font-size:24px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@keyframes pulse{50%{opacity:.3}}@media(min-width:1500px){.shell{padding:0 80px}.intro{padding-top:60px}.floorplan{max-height:530px}}@media(max-width:1050px){.shell{padding:0 32px}.workspace{grid-template-columns:minmax(0,1fr) 285px;gap:20px}.panel-top{padding:22px}.plan-bottom{padding:20px}.legend{gap:12px}.plan-hint{display:none}}@media(max-width:760px){.shell{padding:0 22px}header{height:80px}.header-date{display:none}.header-right{gap:15px}.intro{padding:32px 0 27px;align-items:flex-start;flex-direction:column;gap:20px}h1{font-size:38px}.workspace{grid-template-columns:1fr}.floorplan{min-height:0}.controls{margin-top:9px}.device-list{grid-template-columns:repeat(2,minmax(0,1fr))}.device{padding:15px;gap:10px}.device-icon{display:none}.master{margin-top:15px}.side-note{margin-bottom:0}.summary{margin-top:20px;gap:13px}.summary-time{max-width:90px}.panel-top{padding:20px}.plan-bottom{padding:18px 20px}footer{font-size:8px;letter-spacing:1px;gap:15px}.connection{font-size:10px;padding:8px 12px}}@media(max-width:390px){.device-list{grid-template-columns:1fr}.device-icon{display:flex}.shell{padding:0 16px}h1{font-size:34px}.brand{font-size:16px}.summary-time{display:none}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0c-1 .8-1 2-1 2H9s0-1.2-1-2Z"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9M7 5.5a8 8 0 1 0 10 0"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="var(--bg)"/><circle cx="15" cy="17" r="3" fill="var(--bg)"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3M5 15a8 8 0 0 0 13 3"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10Z"/></symbol>
+  </defs></svg>
+  <div class="shell">
+    <header>
+      <div class="brand"><svg class="brand-mark" viewBox="0 0 32 36" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 33V12L16 3l14 9v21M8 33V16l8-5 8 5v17M13 33V21l3-2 3 2v14"/></svg>MAISON<span class="sr-only"> Smart Home</span></div>
+      <div class="header-right"><span class="header-date" id="headerDate"></span><time id="clock" style="font-size:13px;font-variant-numeric:tabular-nums"></time><button class="icon-btn" id="settings" aria-label="Verbindung einrichten" title="Verbindung einrichten"><svg class="icon"><use href="#i-settings"/></svg></button></div>
+    </header>
+    <main>
+      <div class="intro">
+        <div><div class="eyebrow">Dein Zuhause. Dein Rhythmus.</div><h1>Ein bisschen mehr Ruhe.</h1><p>Das richtige Licht. Ein guter Moment. Alles in deiner Hand.</p></div>
+        <div class="connection" role="status"><span class="dot"></span><span id="connectionLabel">Demo · zum Entdecken</span></div>
+      </div>
+      <div id="notice" class="notice" role="alert" hidden></div>
+      <div class="workspace">
+        <section class="plan-panel" aria-labelledby="planTitle">
+          <div class="panel-top"><h2 class="panel-title" id="planTitle">Dein Zuhause im Überblick</h2><span class="level">GRUNDRISS / 01</span></div>
+          <div class="plan-wrap">
+            <svg class="floorplan" viewBox="0 0 700 465" aria-labelledby="planSvgTitle planSvgDesc">
+              <title id="planSvgTitle">Interaktiver Grundriss</title><desc id="planSvgDesc">Wohnzimmer links, Schlafzimmer rechts oben, Küche und Flur rechts unten. Lampensymbole zum Schalten anklicken oder mit Tab und Enter bedienen.</desc>
+              <defs><radialGradient id="warm"><stop stop-color="#d9b66c" stop-opacity=".17"/><stop offset="1" stop-color="#d9b66c" stop-opacity="0"/></radialGradient><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".6" fill="#515b4b" opacity=".35"/></pattern></defs>
+              <rect x="20" y="10" width="660" height="425" fill="url(#grid)"/>
+              <path d="M66 65H633V392H66Z" fill="#1c241d"/>
+              <ellipse id="glow-living" class="room-glow" cx="220" cy="226" rx="175" ry="175" fill="url(#warm)"/>
+              <ellipse id="glow-bedroom" class="room-glow" cx="512" cy="142" rx="132" ry="110" fill="url(#warm)"/>
+              <ellipse id="glow-kitchen" class="room-glow" cx="510" cy="320" rx="130" ry="100" fill="url(#warm)"/>
+              <g class="walls"><path d="M66 185V65H633V392H560M500 392H66V249M390 65V237M390 300V392M390 248H477M531 248H633"/><path d="M66 185v64M92 65h105M449 65h92" stroke="#d8d4bb" stroke-width="1"/><path d="M60 185v64M92 59h105M449 59h92" stroke="#738169" stroke-width="1"/></g>
+              <g class="furniture-line" stroke-opacity=".65"><path d="M390 300h-55a55 55 0 0 1 55-55M477 248v-54a54 54 0 0 1 54 54M500 392v-60a60 60 0 0 1 60 60"/></g>
+              <g class="furniture"><rect x="100" y="145" width="67" height="171" rx="7"/><rect x="104" y="153" width="13" height="155" rx="4"/><rect x="119" y="156" width="42" height="70" rx="4"/><rect x="119" y="232" width="42" height="70" rx="4"/><rect x="98" y="143" width="71" height="13" rx="4"/><rect x="98" y="305" width="71" height="13" rx="4"/><rect x="215" y="194" width="75" height="80" rx="25"/><rect x="226" y="205" width="53" height="58" rx="18" fill="none"/><circle cx="249" cy="221" r="7"/><path d="M327 153h16v144h-16Z"/><path d="M335 164v121"/><rect x="96" y="340" width="54" height="22" rx="2"/><circle cx="321" cy="346" r="18"/><path d="m314 350 12-13m-10 3 8 9m-8-3-2-9"/>
+                <rect x="465" y="93" width="109" height="112" rx="4"/><rect x="460" y="88" width="119" height="12" rx="2"/><rect x="474" y="103" width="40" height="26" rx="4"/><rect x="524" y="103" width="40" height="26" rx="4"/><path d="M465 139h109M465 147h109"/><rect x="435" y="96" width="20" height="25" rx="2"/><rect x="584" y="96" width="20" height="25" rx="2"/>
+                <path d="M599 267h20v103H551v-23h48Z"/><rect x="603" y="275" width="12" height="26" rx="4"/><circle cx="606" cy="327" r="4"/><circle cx="608" cy="340" r="4"/><rect x="443" y="297" width="65" height="40" rx="13"/><path d="M454 290v-5h12v5m17 0v-5h12v5m-41 54v5h12v-5m17 0v5h12v-5"/>
+              </g>
+              <text x="229" y="112" class="room-label" text-anchor="middle">WOHNZIMMER</text><text x="229" y="129" class="room-number" text-anchor="middle">01 / LIVING</text>
+              <text x="516" y="222" class="room-label" text-anchor="middle">SCHLAFZIMMER</text>
+              <text x="490" y="368" class="room-label" text-anchor="middle">KÜCHE / FLUR</text>
+              <g id="pins"></g>
+              <g transform="translate(637 419)" stroke="#8d9a81" fill="none" stroke-width="1"><path d="M0 12V-9m-4 6 4-6 4 6"/><text x="0" y="-15" fill="#8d9a81" stroke="none" font-size="8" text-anchor="middle">N</text></g>
+              <text x="66" y="427" class="room-number">SCHEMATISCHE ANSICHT</text>
+            </svg>
+          </div>
+          <div class="plan-bottom"><div class="legend"><span><i class="dot on-dot"></i>Licht an</span><span><i class="dot off-dot"></i>Licht aus</span></div><span class="plan-hint">Ein Tippen verändert die Stimmung.</span></div>
+        </section>
+        <aside class="controls" aria-labelledby="devicesTitle">
+          <div class="section-heading"><h2 id="devicesTitle">Licht & Steckdosen</h2><span id="deviceCount" class="counter">3 Geräte</span></div>
+          <div id="deviceList" class="device-list"></div>
+          <button id="masterOff" class="master"><svg class="icon"><use href="#i-power"/></svg><span><strong>Alles ausschalten</strong><small>Ein Handgriff. Feierabend.</small></span><span class="arrow" aria-hidden="true">↗</span></button>
+          <p class="side-note" id="sideNote">Du entdeckst gerade die Demo. Verbinde dein Zuhause über die Einstellungen oben rechts.</p>
+        </aside>
+      </div>
+      <section class="summary" aria-label="Übersicht">
+        <div class="summary-icon"><svg class="icon"><use href="#i-moon"/></svg></div><div><strong id="summaryTitle">Dein Zuhause leuchtet.</strong><p id="summaryText">2 von 3 Steckdosen sind eingeschaltet.</p></div>
+        <div class="summary-time"><span id="lastUpdated">Lokaler Demo-Modus</span><br><button class="refresh" id="refresh"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>Aktualisieren</button></div>
+      </section>
+    </main>
+    <footer><span class="footer-brand">MAISON <span style="color:#697660;letter-spacing:1px;margin-left:12px">SMART LIVING</span></span><span>WENIGER TUN. MEHR ZUHAUSE.</span></footer>
+  </div>
+  <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+  <dialog id="configDialog" aria-labelledby="configTitle">
+    <button class="dialog-close" id="closeConfig" aria-label="Schließen">×</button>
+    <h2 id="configTitle">Zuhause verbinden.</h2><p>Verbinde dein Dashboard mit deinem Cloud-Backend. Der Zugangsschlüssel bleibt nur bis zum Neuladen im Arbeitsspeicher dieses Tabs.</p>
+    <form id="configForm"><label for="backendInput">Backend-URL<input id="backendInput" type="url" placeholder="https://dein-zuhause.onrender.com" required></label><label for="tokenInput">Dashboard-Zugangsschlüssel<input id="tokenInput" type="password" placeholder="Dein DASHBOARD_TOKEN" autocomplete="off" minlength="24" required></label><div class="dialog-actions"><button class="primary" type="submit">Zuhause verbinden</button><button class="secondary" id="demoButton" type="button">Demo entdecken</button></div></form>
+    <p>Dein TP-Link-Passwort gehört ausschließlich ins Backend.</p>
+  </dialog>
+  <script>
+    // KONFIGURATION: Render-URL ohne abschließenden Slash eintragen.
+    // Leer = sofort nutzbare, deutlich markierte Demo. Niemals einen Token hier eintragen.
+    const BACKEND_URL = "";
+    // Exakte Alias-Namen aus der Tapo-App zuordnen. Nicht zugeordnete Geräte bleiben als Kacheln bedienbar.
+    const ROOM_ALIASES = { "Stehlampe": "living", "Nachttisch": "bedroom", "Küchenlicht": "kitchen" };
+    const ROOMS = { living: "Wohnzimmer", bedroom: "Schlafzimmer", kitchen: "Küche / Flur", other: "Nicht im Grundriss zugeordnet" };
+    const POSITIONS = { living: [[292,171],[200,318],[296,310],[202,162],[295,230],[201,270]], bedroom: [[431,161],[596,166],[433,208],[596,208]], kitchen: [[550,289],[419,355],[550,338],[420,281]] };
+    const $ = id => document.getElementById(id);
+    const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+    let savedUrl = "";
+    try { savedUrl = localStorage.getItem("maison.backend") || ""; } catch {}
+    let baseUrl = (BACKEND_URL || savedUrl).replace(/\/+$/, ""), token = "", demo = !baseUrl;
+    let devices = [], busy = false, pendingId = null, lastSync = null, restoreFocus = null;
+    const demoDevices = () => [
+      {id:"demo-living",alias:"Stehlampe",model:"P110",on:true,online:true,controllable:true},
+      {id:"demo-bedroom",alias:"Nachttisch",model:"P100",on:false,online:true,controllable:true},
+      {id:"demo-kitchen",alias:"Küchenlicht",model:"P110",on:true,online:true,controllable:true}
+    ];
+    function roomFor(d) {
+      const room = ROOM_ALIASES[d.alias];
+      if (Object.hasOwn(ROOMS, room)) return room;
+      if (/wohnzimmer|living/i.test(d.alias)) return "living";
+      if (/schlafzimmer|bedroom/i.test(d.alias)) return "bedroom";
+      if (/küche|kueche|flur|kitchen/i.test(d.alias)) return "kitchen";
+      return "other";
+    }
+    function message(text = "") { $("notice").textContent = text; $("notice").hidden = !text; }
+    function announce(text) { $("announcement").textContent = text; }
+    function render() {
+      const focused = restoreFocus?.id || document.activeElement?.dataset?.deviceId;
+      const focusPin = restoreFocus?.pin ?? document.activeElement?.classList?.contains("pin");
+      $("connectionLabel").textContent = demo ? "Demo · zum Entdecken" : busy ? "Zuhause wird synchronisiert …" : !token ? "Verbindung einrichten" : lastSync ? "Mit deinem Zuhause verbunden" : "Verbindung prüfen";
+      $("deviceCount").textContent = `${devices.length} Geräte`;
+      $("deviceList").replaceChildren(); $("pins").replaceChildren();
+      const occupied = {living:0, bedroom:0, kitchen:0};
+      for (const d of devices) {
+        const room = roomFor(d), loading = busy && (pendingId === d.id || pendingId === "all");
+        const label = d.on === null ? "Unbekannt" : d.on ? "An" : "Aus";
+        const button = document.createElement("button");
+        button.className = `device ${d.on === true ? "on" : ""} ${loading ? "busy" : ""}`;
+        button.dataset.deviceId = d.id; button.disabled = busy || !d.controllable;
+        button.setAttribute("aria-label", `${d.alias}: ${label}${d.controllable ? ". Umschalten" : ". " + (d.error || "Nicht verfügbar")}`);
+        if (d.on !== null) button.setAttribute("aria-pressed", String(d.on));
+        button.setAttribute("aria-busy", String(loading));
+        button.innerHTML = `<span class="device-icon">${icon("bulb")}</span><span class="device-copy"><span class="device-name"></span><span class="device-room"></span></span><span class="device-state"><span class="switch"></span><span class="state-label"></span></span>`;
+        button.querySelector(".device-name").textContent = d.alias;
+        button.querySelector(".device-room").textContent = d.error || ROOMS[room];
+        button.querySelector(".state-label").textContent = loading ? "…" : label.toUpperCase();
+        button.addEventListener("click", () => toggle(d.id)); $("deviceList").append(button);
+        const pos = POSITIONS[room]?.[occupied[room]++];
+        if (!pos) continue;
+        const pin = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        pin.setAttribute("class", `pin ${d.on === true ? "on" : ""} ${d.on === null ? "unknown" : ""} ${loading ? "busy" : ""}`);
+        pin.setAttribute("transform", `translate(${pos[0]} ${pos[1]})`);
+        pin.setAttribute("role", "button"); pin.setAttribute("tabindex", busy || !d.controllable ? "-1" : "0");
+        pin.dataset.deviceId = d.id; pin.setAttribute("aria-label", button.getAttribute("aria-label"));
+        pin.setAttribute("aria-disabled", String(busy || !d.controllable));
+        if (d.on !== null) pin.setAttribute("aria-pressed", String(d.on));
+        pin.innerHTML = '<circle r="25" fill="transparent"/><circle class="base" r="18"/><g class="bulb" transform="translate(-10,-11) scale(.85)"><use href="#i-bulb" width="24" height="24"/></g>';
+        const title = document.createElementNS("http://www.w3.org/2000/svg", "title"); title.textContent = `${d.alias} · ${label}`; pin.append(title);
+        pin.addEventListener("click", () => toggle(d.id));
+        pin.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(d.id); } });
+        $("pins").append(pin);
+      }
+      for (const room of Object.keys(POSITIONS)) $("glow-" + room).classList.toggle("on", devices.some(d => roomFor(d) === room && d.on === true));
+      if (!devices.length) { const empty = document.createElement("p"); empty.className = "empty"; empty.textContent = !demo && !token ? "Verbinde dein Zuhause über die Einstellungen oben rechts." : busy ? "Dein Zuhause wird geladen …" : "Keine Tapo-Steckdosen gefunden. Konto, Geräte und Cloud-Verbindung prüfen."; $("deviceList").append(empty); }
+      const on = devices.filter(d => d.on === true).length, unknown = devices.filter(d => d.on === null).length;
+      $("summaryTitle").textContent = !devices.length ? "Dein Zuhause wartet." : unknown ? "Ein Blick auf die Verbindung." : on ? "Dein Zuhause leuchtet." : "Zeit, zur Ruhe zu kommen.";
+      $("summaryText").textContent = devices.length ? `${on} von ${devices.length} Steckdosen sind eingeschaltet.${unknown ? ` ${unknown} Status unbekannt.` : ""}` : "Verbinde deine Steckdosen und mach es dir gemütlich.";
+      $("lastUpdated").textContent = demo ? "Lokaler Demo-Modus" : lastSync ? "Stand " + lastSync.toLocaleTimeString("de-DE", {hour:"2-digit",minute:"2-digit"}) : "Noch nicht synchronisiert";
+      $("masterOff").disabled = busy || !devices.length || (!demo && !token);
+      $("refresh").disabled = busy || (!demo && !token);
+      $("settings").disabled = busy;
+      $("sideNote").textContent = demo ? "Du entdeckst gerade die Demo. Verbinde dein Zuhause über die Einstellungen oben rechts." : "Master Off schaltet alle gefundenen Tapo-Steckdosen aus. Zusätzliche Geräte findest du als Kacheln; Raumzuordnung im HTML konfigurierbar.";
+      if (focused && !busy) {
+        const container = focusPin ? $("pins") : $("deviceList");
+        [...container.children].find(el => el.dataset.deviceId === focused)?.focus();
+        restoreFocus = null;
+      }
+    }
+    async function api(path, method = "GET") {
+      const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 180000);
+      try {
+        const response = await fetch(baseUrl + path, {method, headers:{Authorization:`Bearer ${token}`}, cache:"no-store", signal:controller.signal});
+        const data = await response.json().catch(() => null);
+        if (!response.ok) { if (response.status === 401) token = ""; throw new Error(typeof data?.detail === "string" ? data.detail : `Backend antwortet mit HTTP ${response.status}.`); }
+        if (data === null) throw new Error("Das Backend hat keine gültige Antwort gesendet.");
+        return data;
+      } catch (error) {
+        if (error.name === "AbortError") throw new Error("Die Anfrage dauert zu lange. Der Schaltstatus ist unklar. Bitte aktualisieren.");
+        if (error instanceof TypeError) throw new Error("Backend nicht erreichbar. URL und CORS prüfen; ein schlafender Render-Dienst benötigt beim ersten Aufruf etwa eine Minute.");
+        throw error;
+      } finally { clearTimeout(timer); }
+    }
+    function markUnknown(ids = devices.map(d => d.id)) { devices = devices.map(d => ids.includes(d.id) ? {...d, on:null, online:false, controllable:false, error:"Status erneut abrufen"} : d); lastSync = null; }
+    function validateDevices(data) {
+      if (!Array.isArray(data) || data.some(d => typeof d.id !== "string" || typeof d.alias !== "string" || ![true,false,null].includes(d.on) || typeof d.controllable !== "boolean")) throw new Error("Das Backend liefert ein unerwartetes Geräteformat.");
+      return data;
+    }
+    async function refresh() {
+      if (busy || (!demo && !token)) return;
+      busy = true; message(); render();
+      try { if (!demo) devices = validateDevices(await api("/api/devices")); lastSync = new Date(); announce("Gerätestatus aktualisiert."); }
+      catch (error) { markUnknown(); message(error.message); }
+      finally { busy = false; render(); }
+    }
+    async function toggle(id) {
+      const d = devices.find(d => d.id === id); if (busy || !d?.controllable) return;
+      restoreFocus = {id, pin:document.activeElement?.classList?.contains("pin") || false};
+      busy = true; pendingId = id; message(); render();
+      try {
+        const next = demo ? (await new Promise(r => setTimeout(r, 350)), {...d,on:!d.on}) : validateDevices([await api(`/api/device/${encodeURIComponent(d.alias)}/toggle`, "POST")])[0];
+        devices = devices.map(item => item.id === id ? next : item);
+        announce(`${d.alias} ${next.on ? "eingeschaltet" : "ausgeschaltet"}.`);
+      } catch (error) { markUnknown([id]); message(error.message); }
+      finally { busy = false; pendingId = null; render(); }
+    }
+    async function allOff() {
+      if (busy || !devices.length) return;
+      let allConfirmed = true;
+      busy = true; pendingId = "all"; message(); render();
+      try {
+        if (demo) { await new Promise(r => setTimeout(r, 400)); devices = devices.map(d => ({...d,on:false})); }
+        else {
+          const result = await api("/api/devices/off", "POST");
+          if (!Array.isArray(result.results)) throw new Error("Unvollständige Antwort. Bitte Status aktualisieren.");
+          const outcomes = new Map(result.results.map(r => [r.id,r]));
+          devices = devices.map(d => outcomes.get(d.id)?.success ? validateDevices([outcomes.get(d.id).device])[0] : {...d,on:null,online:false,controllable:false,error:"Ausschalten nicht bestätigt"});
+          const failed = result.results.filter(r => !r.success);
+          if (failed.length) message(`Nicht alle Geräte konnten ausgeschaltet werden: ${failed.map(r => r.alias).join(", ")}. Bitte aktualisieren.`);
+          else if (devices.some(d => d.on === null)) message("Die Geräteliste hat sich geändert. Bitte aktualisieren.");
+          if (failed.length || devices.some(d => d.on === null)) { lastSync = null; allConfirmed = false; }
+        }
+        announce(allConfirmed && devices.every(d => d.on === false) ? "Alle Steckdosen sind ausgeschaltet." : "Ausschalten teilweise unbestätigt.");
+      } catch (error) { markUnknown(); message(error.message); }
+      finally { busy = false; pendingId = null; render(); }
+    }
+    function openSettings() { $("backendInput").value = baseUrl; $("tokenInput").value = ""; $("configDialog").showModal(); }
+    $("settings").addEventListener("click", openSettings);
+    $("closeConfig").addEventListener("click", () => $("configDialog").close());
+    $("refresh").addEventListener("click", refresh); $("masterOff").addEventListener("click", allOff);
+    $("configForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const url = new URL($("backendInput").value);
+      const local = ["localhost","127.0.0.1","[::1]"].includes(url.hostname);
+      if ((url.protocol !== "https:" && !(url.protocol === "http:" && local)) || url.username || url.password || url.search || url.hash) { $("backendInput").setCustomValidity("HTTPS verwenden (HTTP nur für localhost); keine Zugangsdaten, Query oder Fragmente in der URL."); $("backendInput").reportValidity(); return; }
+      baseUrl = url.href.replace(/\/+$/, ""); token = $("tokenInput").value; $("tokenInput").value = "";
+      try { localStorage.setItem("maison.backend", baseUrl); } catch {}
+      demo = false; devices = []; lastSync = null; $("configDialog").close(); refresh();
+    });
+    $("backendInput").addEventListener("input", () => $("backendInput").setCustomValidity(""));
+    $("configDialog").addEventListener("close", () => { $("tokenInput").value = ""; });
+    $("demoButton").addEventListener("click", () => { demo = true; token = ""; devices = demoDevices(); lastSync = null; message(); $("configDialog").close(); render(); });
+    function updateClock() { const now = new Date(); $("clock").textContent = now.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}); $("clock").dateTime = now.toISOString(); $("headerDate").textContent = now.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long"}); }
+    updateClock(); setInterval(updateClock, 10000);
+    setInterval(() => { if (!demo && token && !busy && !document.hidden) refresh(); }, 45000);
+    devices = demo ? demoDevices() : []; render();
+    if (!demo) openSettings();
+  </script>
+</body>
+</html>
