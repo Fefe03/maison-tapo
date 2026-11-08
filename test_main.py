@@ -195,7 +195,7 @@ class BackendTests(unittest.TestCase):
             {"error_code": 0, "result": {"device_on": True}},
         ]))
         api = SimpleNamespace(access_key="test", secret_key="test", _app_name="Tapo")
-        with patch("main.TPLinkDeviceClient", return_value=v1):
+        with patch("main.TapoGateway", return_value=v1):
             self.cloud.manager.items = [TapoSwitch(device, api, "fake-token", "fake-terminal")]
         response = self.toggle(device.alias)
         self.assertEqual(response.status_code, 200)
@@ -212,7 +212,7 @@ class BackendTests(unittest.TestCase):
         )
         v1 = SimpleNamespace(pass_through_request=AsyncMock(return_value=None))
         api = SimpleNamespace(access_key="test", secret_key="test", _app_name="Tapo")
-        with patch("main.TPLinkDeviceClient", return_value=v1):
+        with patch("main.TapoGateway", return_value=v1):
             self.cloud.manager.items = [TapoSwitch(device, api, "fake-token", "fake-terminal")]
         response = self.client.post("/api/devices/off", headers=HEADERS)
         self.assertFalse(response.json()["success"])

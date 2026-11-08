@@ -6,6 +6,8 @@ No credentials, cloud exception bodies or cloud tokens are sent to the browser.
 """
 
 import asyncio
+import json
+import logging
 from base64 import b64decode
 from binascii import Error as Base64Error
 import os
@@ -28,6 +30,7 @@ from tplinkcloud.device import TPLinkDevice
 from tplinkcloud.device_client import TPLinkDeviceClient
 
 BEDROOM_LIGHTS = ("Ambientebeleuchtung", "Vitrine")
+LOGGER = logging.getLogger("uvicorn.error")
 
 
 def device_alias(device):
@@ -53,6 +56,10 @@ def device_kind(device):
     return None
 
 
+def diagnostic_model(device):
+    return re.sub(r"[^A-Za-z0-9() ._-]", "?", device.device_info.device_model or "?")[:32]
+
+
 class TapoApi(TPLinkApi):
     def _request_post_v2(self, base_url, url_path, body, token=None):
         response = super()._request_post_v2(base_url, url_path, body, token)
@@ -68,12 +75,38 @@ class TapoApi(TPLinkApi):
         return response
 
 
+class TapoGateway(TPLinkDeviceClient):
+    last_response = "no response"
+
+    async def _request_post(self, body, url_path="/"):
+        self.last_response = "no response"
+        try:
+            response = await super()._request_post(body, url_path)
+        except Exception as error:
+            http_code = re.match(r"^(\d{3}):", str(error)) if isinstance(error, TPLinkCloudError) else None
+            self.last_response = f"HTTP {http_code[1]}" if http_code else type(error).__name__
+            raise
+        code = response.error_code
+        self.last_response = f"cloud={code}" if type(code) is int else "unknown cloud response"
+        if response.successful and isinstance(response.result, dict):
+            inner = response.result.get("responseData")
+            if isinstance(inner, str):
+                try:
+                    inner = json.loads(inner)
+                except ValueError:
+                    inner = None
+            if isinstance(inner, dict) and type(inner.get("error_code")) is int:
+                self.last_response += f", device={inner['error_code']}"
+        return response
+
+
 class TapoSwitch(TPLinkDevice):
-    def __init__(self, device, account_api, token, term_id):
+    def __init__(self, device, account_api, token, term_id, diagnostics=None):
         super().__init__(device._client, device.device_id, device.device_info)
         self.cloud_type = device.cloud_type
+        self._diagnostics = diagnostics
         # Older gateways also accept native messages in the v1 cloud envelope.
-        self._v1_client = TPLinkDeviceClient(
+        self._v1_client = TapoGateway(
             device._client.host, token, term_id=term_id, access_key=account_api.access_key,
             secret_key=account_api.secret_key, app_name=account_api._app_name,
             cloud_type="kasa",
@@ -107,11 +140,16 @@ class TapoSwitch(TPLinkDevice):
                     return result["device_on"]
         if self._native_client:
             return None
+        native_v2 = getattr(self._client, "last_response", "unknown")
         try:
             state = await asyncio.wait_for(self._legacy_state(), timeout=3)
         except Exception:
-            return None
+            state = None
         self._legacy_confirmed = type(state) is bool
+        if state is None and self._diagnostics is not None and self.device_id not in self._diagnostics:
+            self._diagnostics.add(self.device_id)
+            LOGGER.info("Tapo state unavailable: model=%s, native v2=%s, native v1=%s, legacy=%s",
+                        diagnostic_model(self), native_v2, self._v1_client.last_response, self._client.last_response)
         return state
 
     async def _set_power(self, desired):
@@ -140,6 +178,8 @@ class TapoDeviceManager(TPLinkDeviceManager):
         term_id = str(uuid4())
         super().__init__(prefetch=False, cache_devices=False, term_id=term_id)
         self._tapo_api = TapoApi(cloud_type="tapo", term_id=term_id)
+        self._diagnosed = set()
+        self._inventory = None
         result = self._tapo_api.login(username, password) or {}
         self._tapo_token = result.get("token")
         self._tapo_refresh_token = result.get("refreshToken")
@@ -147,14 +187,23 @@ class TapoDeviceManager(TPLinkDeviceManager):
             raise TPLinkCloudError("Tapo login returned no token")
 
     async def get_devices(self):
-        return await self._get_cloud_devices(
+        devices = await self._get_cloud_devices(
             self._tapo_api, self._tapo_token, self._tapo_refresh_token, "tapo"
         )
+        inventory = Counter(diagnostic_model(device) for device in devices)
+        if inventory != self._inventory:
+            LOGGER.info("Tapo cloud inventory by model: %s", dict(inventory))
+            self._inventory = inventory
+        return devices
 
     def _construct_device(self, device_info, api, token, cloud_type):
         device = super()._construct_device(device_info, api, token, cloud_type)
         if device_kind(device) in ("plug", "light"):
-            return TapoSwitch(device, api, token, self._term_id)
+            device._client = TapoGateway(
+                device._client.host, token, term_id=self._term_id, access_key=api.access_key,
+                secret_key=api.secret_key, app_name=api._app_name, cloud_type=cloud_type,
+            )
+            return TapoSwitch(device, api, token, self._term_id, self._diagnosed)
         return device
 
 
