@@ -242,7 +242,9 @@
           if (!extra.length) continue;
           for (const device of extra) {
             const hub = isHub(device);
-            renderControl(device, {icon:hub ? "hub" : "plug"}, statusLabel(device), device.error || (hub ? "Hub" : "Steckdose"),
+            const deviceIcon = hub ? "hub" : device.kind === "light" ? "bulb" : "plug";
+            const detail = device.error || {hub:"Hub", bulb:"Beleuchtung", plug:"Steckdose"}[deviceIcon];
+            renderControl(device, {icon:deviceIcon}, statusLabel(device), detail,
                           pendingId === device.id || (!hub && pendingId === "all"), () => toggle(device.id), parent);
           }
         }
@@ -272,7 +274,7 @@
       $("settings").disabled = busy;
       $("previewLayout").hidden = demo;
       $("previewLayout").disabled = busy;
-      $("sideNote").textContent = demo ? "Die Demo zeigt deine angegebenen Zustände. Schalten verändert hier nur die Vorschau." : "Alles ausschalten wirkt auf die gefundenen Steckdosen. Der Hub zeigt seinen Verbindungsstatus an.";
+      $("sideNote").textContent = demo ? "Die Demo zeigt deine angegebenen Zustände. Schalten verändert hier nur die Vorschau." : "Alles ausschalten wirkt auf die gefundenen Lampen und Steckdosen. Der Hub zeigt seinen Verbindungsstatus an.";
       if (focused && !busy) {
         const container = focusPin ? $("pins") : $("deviceList");
         [...container.querySelectorAll("[data-device-id]")].find(el => el.dataset.deviceId === focused)?.focus();
@@ -344,7 +346,7 @@
       finally { busy = false; pendingId = null; render(); }
     }
     function allOff() {
-      return setBatch(devices.filter(d => !isHub(d)), false, "all", "/api/devices/off", "Alle Steckdosen sind ausgeschaltet.");
+      return setBatch(devices.filter(d => !isHub(d)), false, "all", "/api/devices/off", "Alle Schaltgeräte sind ausgeschaltet.");
     }
     function toggleBedroom() {
       const members = bedroomMembers();

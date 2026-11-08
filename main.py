@@ -24,17 +24,19 @@ from fastapi.responses import FileResponse
 from tplinkcloud import TPLinkDeviceManager, TPLinkAuthError, TPLinkMFARequiredError, TPLinkCloudError
 from tplinkcloud.api_response import TPLinkApiResponse
 from tplinkcloud.client import TPLinkApi
+from tplinkcloud.device import TPLinkDevice
+from tplinkcloud.device_client import TPLinkDeviceClient
 
 BEDROOM_LIGHTS = ("Ambientebeleuchtung", "Vitrine")
 
 
 def device_alias(device):
-    alias = device.get_alias() or device.device_id
+    alias = (device.get_alias() or "").strip() or device.device_id
     if getattr(device, "cloud_type", None) == "tapo":
         try:
             decoded = b64decode(alias, validate=True).decode("utf-8")
             if decoded.isprintable() and decoded.strip():
-                return decoded
+                return decoded.strip()
         except (Base64Error, UnicodeError, ValueError):
             pass
     return alias
@@ -46,6 +48,8 @@ def device_kind(device):
         return "plug"
     if re.match(r"^H\d", model):
         return "hub"
+    if re.match(r"^L\d", model):
+        return "light"
     return None
 
 
@@ -62,6 +66,71 @@ class TapoApi(TPLinkApi):
             if type(code) is int and code != 0:
                 return TPLinkApiResponse({"error_code": code, "result": response.result})
         return response
+
+
+class TapoSwitch(TPLinkDevice):
+    def __init__(self, device, account_api, token, term_id):
+        super().__init__(device._client, device.device_id, device.device_info)
+        self.cloud_type = device.cloud_type
+        # Older gateways also accept native messages in the v1 cloud envelope.
+        self._v1_client = TPLinkDeviceClient(
+            device._client.host, token, term_id=term_id, access_key=account_api.access_key,
+            secret_key=account_api.secret_key, app_name=account_api._app_name,
+            cloud_type="kasa",
+        )
+        self._native_client = None
+        self._legacy_confirmed = False
+
+    async def _legacy_state(self):
+        info = await self.get_sys_info()
+        if isinstance(info, dict) and info.get("err_code", 0) == 0:
+            state = info.get("relay_state")
+            if type(state) in (int, bool) and state in (0, 1):
+                return bool(state)
+        return None
+
+    async def is_on(self):
+        if self._legacy_confirmed:
+            return await self._legacy_state()
+        clients = [self._native_client] if self._native_client else [self._client, self._v1_client]
+        for client in clients:
+            try:
+                response = await asyncio.wait_for(
+                    client.pass_through_request(self.device_id, {"method": "get_device_info"}), timeout=4
+                )
+            except Exception:
+                continue
+            if isinstance(response, dict) and response.get("error_code") == 0:
+                result = response.get("result")
+                if isinstance(result, dict) and type(result.get("device_on")) is bool:
+                    self._native_client = client
+                    return result["device_on"]
+        if self._native_client:
+            return None
+        try:
+            state = await asyncio.wait_for(self._legacy_state(), timeout=3)
+        except Exception:
+            return None
+        self._legacy_confirmed = type(state) is bool
+        return state
+
+    async def _set_power(self, desired):
+        if self._native_client:
+            response = await self._native_client.pass_through_request(self.device_id, {
+                "method": "set_device_info", "params": {"device_on": desired},
+            })
+            if isinstance(response, dict) and response.get("error_code") not in (0, None):
+                raise TPLinkCloudError("Device rejected the power request")
+            return response
+        if self._legacy_confirmed:
+            return await (super().power_on() if desired else super().power_off())
+        raise TPLinkCloudError("No verified power protocol")
+
+    async def power_on(self):
+        return await self._set_power(True)
+
+    async def power_off(self):
+        return await self._set_power(False)
 
 
 class TapoDeviceManager(TPLinkDeviceManager):
@@ -81,6 +150,12 @@ class TapoDeviceManager(TPLinkDeviceManager):
         return await self._get_cloud_devices(
             self._tapo_api, self._tapo_token, self._tapo_refresh_token, "tapo"
         )
+
+    def _construct_device(self, device_info, api, token, cloud_type):
+        device = super()._construct_device(device_info, api, token, cloud_type)
+        if device_kind(device) in ("plug", "light"):
+            return TapoSwitch(device, api, token, self._term_id)
+        return device
 
 
 class Cloud:
@@ -143,7 +218,7 @@ class Cloud:
             "model": device.device_info.device_model,
             "kind": kind,
             "on": state,
-            "online": state is not None,
+            "online": True if state is not None else None,
             "controllable": state is not None and not duplicate,
             "error": "Alias mehrfach vergeben – in der Tapo-App umbenennen" if duplicate else error,
         }
@@ -153,6 +228,10 @@ class Cloud:
             name = device_alias(device)
             result = {"id": device.device_id, "alias": name}
             try:
+                if isinstance(device, TapoSwitch):
+                    state, _ = await self.status(device)
+                    if state is None:
+                        raise TPLinkCloudError("No confirmed power state")
                 command = device.power_on if desired else device.power_off
                 await asyncio.wait_for(command(), timeout=12)
                 row = await self.row(device, duplicates)
@@ -167,19 +246,19 @@ class Cloud:
 
     async def perform(self, action, alias=None):
         devices = await self.devices()
-        plugs = [device for device in devices if device_kind(device) == "plug"]
-        aliases = Counter(device_alias(device) for device in plugs)
+        switches = [device for device in devices if device_kind(device) in ("plug", "light")]
+        aliases = Counter(device_alias(device) for device in switches)
         duplicates = {name for name, count in aliases.items() if count > 1}
         if action == "list":
             return await asyncio.gather(*(self.row(d, duplicates) for d in devices))
         if action == "off":
-            return await self.set_power(plugs, False, duplicates)
+            return await self.set_power(switches, False, duplicates)
         if action in ("bedroom-on", "bedroom-off"):
             if any(aliases[name] != 1 for name in BEDROOM_LIGHTS):
                 raise HTTPException(409, "Beide Schlafzimmerlichter müssen genau einmal gefunden werden.")
-            lights = [device for device in plugs if device_alias(device) in BEDROOM_LIGHTS]
+            lights = [device for device in switches if device_alias(device) in BEDROOM_LIGHTS]
             return await self.set_power(lights, action == "bedroom-on", duplicates)
-        matches = [device for device in plugs if device_alias(device) == alias]
+        matches = [device for device in switches if device_alias(device) == alias.strip()]
         if not matches:
             raise HTTPException(404, "Gerät nicht gefunden. Liste aktualisieren.")
         if len(matches) != 1:

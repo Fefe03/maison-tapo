@@ -68,7 +68,7 @@ Alle `/api/…`-Aufrufe benötigen `Authorization: Bearer <DASHBOARD_TOKEN>`.
 |---|---|
 | `GET /api/devices` | Liste mit `id`, `alias`, `model`, `kind`, `on`, `online`, `controllable`, `error` |
 | `POST /api/device/{alias}/toggle` | Schaltet einmal und liest den neuen Zustand zurück; Alias URL-kodieren |
-| `POST /api/devices/off` | Setzt alle gefundenen Steckdosen auf Aus, mit Erfolg/Fehler pro Gerät |
+| `POST /api/devices/off` | Setzt alle gefundenen schaltbaren Geräte auf Aus, mit Erfolg/Fehler pro Gerät |
 | `POST /api/groups/bedroom-lights/{state}` | Setzt Ambientebeleuchtung und Vitrine auf `on` oder `off`, wenn beide Namen jeweils genau einmal vorkommen |
 | `GET /health` | Webserver erreichbar, öffentlich |
 
@@ -77,7 +77,7 @@ Alle `/api/…`-Aufrufe benötigen `Authorization: Bearer <DASHBOARD_TOKEN>`.
 ## Grenzen dieses Tests
 
 - Verwendet die geprüfte Bibliotheksversion `tplink-cloud-api==5.2.2`, deren Projekt Tapo-Cloud-Steuerung dokumentiert. Die tatsächliche Funktion hängt von Modell, Firmware und TP-Link-Cloud ab; ein Test mit echten Geräten ist erforderlich. [Bibliothek](https://github.com/piekstra/tplink-cloud-api).
-- Die Schaltfunktionen verwenden Tapo-Steckdosen der P-Serie. Hubs der H-Serie erscheinen mit ihrem Cloud-Verbindungsstatus. Mehrfachsteckdosen mit einzeln adressierbaren Ausgängen und eigenständige Leuchtmittel sind hier nicht implementiert.
+- Die Schaltfunktionen berücksichtigen Tapo-Steckdosen der P-Serie und Lampen der L-Serie, wenn der Server den Schaltzustand über die Cloud lesen kann. Hubs der H-Serie erscheinen mit ihrem Cloud-Verbindungsstatus. Mehrfachsteckdosen mit einzeln adressierbaren Ausgängen sind hier nicht implementiert.
 - Für TP-Link-Konten mit interaktiver MFA ist ein zusätzlicher Anmeldungs- und Token-Speicher-Flow nötig. Der Minimalserver implementiert diesen nicht und meldet Anmeldefehler; er fordert nicht zum Deaktivieren von MFA auf.
 - Ein Serverprozess / eine Instanz: `--workers 1` beibehalten, damit die Schalt-Sperre gilt. Kein Mehrbenutzer- oder Dauerbetriebssystem.
 - CORS erlaubt standardmäßig jede Origin. Die API bleibt durch den Zugangsschlüssel geschützt. Eine öffentliche HTML-Datei enthält nur die Backend-URL, keine Geheimnisse. Optional `CORS_ORIGINS` auf konkrete Origins begrenzen, durch Kommas getrennt (keine URL-Pfade).
